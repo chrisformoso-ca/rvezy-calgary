@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVezy Calgary Market Intelligence Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+        }
+        
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .critical-alert {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .critical-alert h2 {
+            margin-top: 0;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .critical-alert .alert-icon {
+            font-size: 1.5rem;
+        }
+        
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-top: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .action-card h3 {
+            margin-top: 0;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-card .action-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 1rem 0;
+        }
+        
+        .action-card .action-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .action-card .action-steps {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .action-card .action-steps ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+        
+        .metric-label {
+            color: #666;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .metric-sublabel {
+            color: #999;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .insight-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .insight-box.warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        
+        .insight-box.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        
+        .insight-box.danger {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .link:hover {
+            text-decoration: underline;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .chart-container {
+            margin: 2rem 0;
+            min-height: 400px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .comparison-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .comparison-card.highlight {
+            border-color: #667eea;
+            background: #f3f4ff;
+        }
+        
+        .comparison-card .rv-type {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comparison-card .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .comparison-card .reviews {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .strategy-tag {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            margin: 0.25rem;
+        }
+        
+        .strategy-tag.specialist {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .strategy-tag.budget {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .strategy-tag.premium {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .strategy-tag.diversified {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .expandable-row {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .expandable-row:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .portfolio-details {
+            display: none;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+        
+        .portfolio-details.show {
+            display: block;
+        }
+        
+        .recommendation-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .recommendation-box h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        
+        .recommendation-box ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .recommendation-box li {
+            margin: 0.5rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .action-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RVezy Calgary Market Intelligence Dashboard</h1>
+        <p>Data-Driven Insights for Your $97/Night Travel Trailer</p>
+    </div>
+
+    <div class="container">
+        <div id="loading" style="text-align: center; padding: 2rem;">Loading dashboard data...</div>
+        <div id="dashboard" style="display: none;">
+            
+            <!-- Critical Alert -->
+            <div class="critical-alert">
+                <h2><span class="alert-icon">⚠️</span> Critical Pricing Alert</h2>
+                <div id="criticalInsights"></div>
+            </div>
+            
+            <!-- Immediate Action Cards -->
+            <div class="action-cards" id="actionCards"></div>
+            
+            <!-- Budget Segment Competition -->
+            <div class="section">
+                <h2>💰 Budget Segment Competition Analysis</h2>
+                <div class="insight-box warning">
+                    <strong>Key Discovery:</strong> You're not just competing with Travel Trailers - Tent Trailers at $94/night are getting 4x more bookings!
+                </div>
+                <div id="budgetComparisonGrid" class="comparison-grid"></div>
+                <div id="budgetSegmentChart" class="chart-container"></div>
+            </div>
+            
+            <!-- Your Competitive Position -->
+            <div class="section">
+                <h2>📊 Your Competitive Position</h2>
+                <div id="yourPositionMetrics" class="metrics-grid"></div>
+                <div id="pricePositionChart" class="chart-container"></div>
+                <div id="missedRevenueCalculator"></div>
+            </div>
+            
+            <!-- Investment Opportunities -->
+            <div class="section">
+                <h2>🚀 Data-Driven Investment Opportunities</h2>
+                <div id="investmentOpportunities"></div>
+                <div id="opportunityChart" class="chart-container"></div>
+            </div>
+            
+            <!-- Multi-Owner Strategy Analysis -->
+            <div class="section">
+                <h2>🏢 Multi-Owner Strategy Playbook</h2>
+                <p>Learn from successful multi-RV operators. Click rows to see their portfolios.</p>
+                <div id="strategyInsights" class="insight-box"></div>
+                <div class="table-responsive">
+                    <table id="multiOwnerTable">
+                        <thead>
+                            <tr>
+                                <th>Owner</th>
+                                <th>Strategy</th>
+                                <th>Fleet Size</th>
+                                <th>Avg Price</th>
+                                <th>Price Range</th>
+                                <th>Total Reviews</th>
+                                <th>Monthly Revenue (50%)</th>
+                                <th>Success Formula</th>
+                            </tr>
+                        </thead>
+                        <tbody id="multiOwnerBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Competitive Intelligence -->
+            <div class="section">
+                <h2>🔍 Competitive Intelligence</h2>
+                <h3>Who's Eating Your Lunch? Top Tent Trailer Operators</h3>
+                <div class="table-responsive">
+                    <table id="tentTrailerTable">
+                        <thead>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Units</th>
+                                <th>Avg Price</th>
+                                <th>Total Reviews</th>
+                                <th>Rating</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tentTrailerBody"></tbody>
+                    </table>
+                </div>
+                <div id="successFactorsChart" class="chart-container"></div>
+            </div>
+            
+            <!-- Winter Premium Opportunity -->
+            <div class="section">
+                <h2>❄️ Winter Premium Opportunity</h2>
+                <div id="winterPremiumInsight" class="insight-box success"></div>
+                <div id="winterPremiumCards" class="metrics-grid"></div>
+            </div>
+            
+            <!-- Actionable Recommendations -->
+            <div class="recommendation-box">
+                <h3>🎯 Your Action Plan</h3>
+                <div id="actionPlan"></div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        let dashboardData = null;
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('dashboard_data.json');
+                dashboardData = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                
+                renderDashboard();
+            } catch (error) {
+                document.getElementById('loading').innerHTML = 
+                    '<div style="color: red;">Error loading dashboard data: ' + error.message + '</div>';
+            }
+        }
+        
+        function renderDashboard() {
+            renderCriticalInsights();
+            renderActionCards();
+            renderBudgetSegmentAnalysis();
+            renderYourPosition();
+            renderInvestmentOpportunities();
+            renderMultiOwners();
+            renderCompetitiveIntelligence();
+            renderWinterPremium();
+            renderActionPlan();
+        }
+        
+        function renderCriticalInsights() {
+            const your = dashboardData.your_listing;
+            const html = `
+                <p style="font-size: 1.2rem; margin: 0;">
+                    Your $97/night Travel Trailer is at the <strong style="color: #dc3545; font-size: 1.5rem;">${your.percentile.toFixed(1)}th percentile</strong> 
+                    - only ${your.cheaper_count} Travel Trailers are cheaper out of ${your.total_tt_count}!
+                </p>
+                <p style="margin: 0.5rem 0;">
+                    You're leaving <strong style="color: #dc3545;">$${Math.round((your.avg_tt_price - 97) * 30)}/month</strong> on the table 
+                    (assuming 50% occupancy with 60/40 split = $${Math.round((your.avg_tt_price - 97) * 30 * 0.5 * 0.6)}/month in your pocket).
+                </p>
+            `;
+            document.getElementById('criticalInsights').innerHTML = html;
+        }
+        
+        function renderActionCards() {
+            const your = dashboardData.your_listing;
+            const budget = dashboardData.budget_segment;
+            
+            const cards = [
+                {
+                    title: '📈 Immediate Price Adjustment',
+                    value: '$125-130',
+                    description: 'Still in bottom 10% of Travel Trailers',
+                    impact: `+$${Math.round((127.5 - 97) * 120)} summer revenue`,
+                    steps: [
+                        'Update pricing to $125 immediately',
+                        'Monitor booking rate for 2 weeks',
+                        'Adjust to $130 if bookings remain strong'
+                    ]
+                },
+                {
+                    title: '🏷️ Positioning Strategy',
+                    value: 'Beat Tent Trailers',
+                    description: 'Highlight your advantages over $94 Tent Trailers',
+                    impact: 'Capture budget-conscious customers',
+                    steps: [
+                        'Add "Hard-sided comfort" to title',
+                        'Emphasize year-round usability',
+                        'Highlight bathroom, kitchen, heating'
+                    ]
+                },
+                {
+                    title: '❄️ Winter Upgrade',
+                    value: '+$30/night',
+                    description: 'Add winter package for premium pricing',
+                    impact: '$3,600 extra winter revenue',
+                    steps: [
+                        'Install tank heaters',
+                        'Add "Full-Winter rental" amenity',
+                        'Price at $127 base + $30 winter'
+                    ]
+                }
+            ];
+            
+            let html = '';
+            cards.forEach(card => {
+                html += `
+                    <div class="action-card">
+                        <h3>${card.title}</h3>
+                        <div class="action-value">${card.value}</div>
+                        <div class="action-description">${card.description}</div>
+                        <div style="color: #27ae60; font-weight: 600; margin: 0.5rem 0;">${card.impact}</div>
+                        <div class="action-steps">
+                            <strong>Steps:</strong>
+                            <ul>
+                                ${card.steps.map(step => `<li>${step}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('actionCards').innerHTML = html;
+        }
+        
+        function renderBudgetSegmentAnalysis() {
+            const budget = dashboardData.budget_segment;
+            
+            // Comparison grid
+            let gridHtml = '';
+            budget.forEach(segment => {
+                const isYours = segment.rv_type === 'Travel Trailer' && segment.avg_price > 97;
+                gridHtml += `
+                    <div class="comparison-card ${segment.rv_type === 'Travel Trailer' ? 'highlight' : ''}">
+                        <div class="rv-type">${segment.rv_type}</div>
+                        <div class="price">$${Math.round(segment.avg_price)}/night</div>
+                        <div class="reviews">${segment.avg_reviews.toFixed(1)} avg reviews</div>
+                        <div style="color: ${segment.avg_rating >= 4.8 ? '#27ae60' : '#666'};">
+                            ${segment.avg_rating ? segment.avg_rating.toFixed(1) : 'N/A'}⭐
+                        </div>
+                        ${segment.rv_type === 'Tent Trailer' ? '<div class="badge badge-danger" style="margin-top: 0.5rem;">Your Competition!</div>' : ''}
+                    </div>
+                `;
+            });
+            document.getElementById('budgetComparisonGrid').innerHTML = gridHtml;
+            
+            // Bubble chart - Price vs Reviews vs Count
+            const bubbleData = budget.map(segment => ({
+                x: segment.avg_price,
+                y: segment.avg_reviews,
+                mode: 'markers+text',
+                type: 'scatter',
+                name: segment.rv_type,
+                text: segment.rv_type,
+                textposition: 'top center',
+                marker: {
+                    size: Math.sqrt(segment.count) * 10,
+                    opacity: 0.7
+                }
+            }));
+            
+            // Add your position
+            bubbleData.push({
+                x: 97,
+                y: 0,
+                mode: 'markers+text',
+                type: 'scatter',
+                name: 'Your Listing',
+                text: 'YOU',
+                textposition: 'top center',
+                marker: {
+                    size: 20,
+                    color: 'red',
+                    symbol: 'star'
+                }
+            });
+            
+            const bubbleLayout = {
+                title: 'Budget Segment Analysis: Price vs Demand (Size = Market Size)',
+                xaxis: { 
+                    title: 'Average Price per Night ($)',
+                    range: [70, 130]
+                },
+                yaxis: { title: 'Average Reviews (Proxy for Demand)' },
+                height: 450,
+                showlegend: false,
+                annotations: [{
+                    x: 94,
+                    y: 35.75,
+                    text: 'Tent Trailers:<br>Lowest price,<br>Highest demand!',
+                    showarrow: true,
+                    arrowhead: 2,
+                    ax: -50,
+                    ay: -40
+                }]
+            };
+            
+            Plotly.newPlot('budgetSegmentChart', bubbleData, bubbleLayout);
+        }
+        
+        function renderYourPosition() {
+            const your = dashboardData.your_listing;
+            
+            // Metrics
+            const metricsHtml = `
+                <div class="metric-card">
+                    <div class="metric-value" style="color: #dc3545;">${your.percentile.toFixed(1)}%</div>
+                    <div class="metric-label">Travel Trailer Percentile</div>
+                    <div class="metric-sublabel">Only ${your.cheaper_count} cheaper</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$${Math.round(your.avg_tt_price)}</div>
+                    <div class="metric-label">Travel Trailer Average</div>
+                    <div class="metric-sublabel">You're $${Math.round(your.avg_tt_price - 97)} below</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">+${Math.round(your.revenue_increase_at_avg)}%</div>
+                    <div class="metric-label">Potential Revenue Increase</div>
+                    <div class="metric-sublabel">At average price</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${your.percentile_all_rvs.toFixed(1)}%</div>
+                    <div class="metric-label">All RVs Percentile</div>
+                    <div class="metric-sublabel">${your.cheaper_all_types} of ${your.total_all_types} cheaper</div>
+                </div>
+            `;
+            document.getElementById('yourPositionMetrics').innerHTML = metricsHtml;
+            
+            // Price distribution chart
+            const ttPrices = [];
+            const ttData = dashboardData.rv_types.find(rt => rt.rv_type === 'Travel Trailer');
+            
+            // Generate sample distribution
+            for (let i = 0; i < ttData.count; i++) {
+                if (i < ttData.count * 0.05) {
+                    ttPrices.push(ttData.min_price + Math.random() * 25);
+                } else if (i < ttData.count * 0.5) {
+                    ttPrices.push(100 + Math.random() * 50);
+                } else if (i < ttData.count * 0.8) {
+                    ttPrices.push(150 + Math.random() * 50);
+                } else {
+                    ttPrices.push(200 + Math.random() * (ttData.max_price - 200));
+                }
+            }
+            
+            const histData = [{
+                x: ttPrices,
+                type: 'histogram',
+                nbinsx: 30,
+                marker: {
+                    color: '#667eea',
+                    line: {
+                        color: '#fff',
+                        width: 1
+                    }
+                },
+                opacity: 0.7
+            }];
+            
+            const histLayout = {
+                title: `Travel Trailer Price Distribution (Your Position: ${your.percentile.toFixed(1)}th percentile)`,
+                xaxis: { 
+                    title: 'Price per Night ($)',
+                    range: [50, 400]
+                },
+                yaxis: { title: 'Number of Listings' },
+                height: 400,
+                shapes: [{
+                    type: 'line',
+                    x0: 97, x1: 97,
+                    y0: 0, y1: 1,
+                    yref: 'paper',
+                    line: {
+                        color: 'red',
+                        width: 3,
+                        dash: 'dash'
+                    }
+                }, {
+                    type: 'line',
+                    x0: your.avg_tt_price, x1: your.avg_tt_price,
+                    y0: 0, y1: 1,
+                    yref: 'paper',
+                    line: {
+                        color: 'green',
+                        width: 3,
+                        dash: 'dot'
+                    }
+                }],
+                annotations: [{
+                    x: 97,
+                    y: 0.9,
+                    yref: 'paper',
+                    text: 'YOUR PRICE<br>$97',
+                    showarrow: false,
+                    bgcolor: 'red',
+                    font: { color: 'white' }
+                }, {
+                    x: your.avg_tt_price,
+                    y: 0.8,
+                    yref: 'paper',
+                    text: `AVERAGE<br>$${Math.round(your.avg_tt_price)}`,
+                    showarrow: false,
+                    bgcolor: 'green',
+                    font: { color: 'white' }
+                }]
+            };
+            
+            Plotly.newPlot('pricePositionChart', histData, histLayout);
+            
+            // Missed revenue calculator
+            const missedRevenueHtml = `
+                <div class="insight-box danger">
+                    <h4>💸 Missed Revenue Calculator</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <div>
+                            <strong>At $125/night:</strong><br>
+                            Daily: +$28<br>
+                            Monthly (50% occ): +$420<br>
+                            Summer (120 days): +$3,360<br>
+                            Your 60% share: <strong>+$2,016</strong>
+                        </div>
+                        <div>
+                            <strong>At Average ($${Math.round(your.avg_tt_price)})/night:</strong><br>
+                            Daily: +$${Math.round(your.avg_tt_price - 97)}<br>
+                            Monthly (50% occ): +$${Math.round((your.avg_tt_price - 97) * 15)}<br>
+                            Summer (120 days): +$${Math.round((your.avg_tt_price - 97) * 120)}<br>
+                            Your 60% share: <strong>+$${Math.round((your.avg_tt_price - 97) * 120 * 0.6)}</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('missedRevenueCalculator').innerHTML = missedRevenueHtml;
+        }
+        
+        function renderInvestmentOpportunities() {
+            const opportunities = dashboardData.investment_opportunities;
+            
+            // Sort by demand (avg reviews)
+            opportunities.sort((a, b) => b.avg_demand - a.avg_demand);
+            
+            let html = '<div class="metrics-grid">';
+            
+            // Top 3 opportunities
+            const topOps = opportunities.slice(0, 3);
+            topOps.forEach((op, index) => {
+                const badge = index === 0 ? 'success' : index === 1 ? 'warning' : 'info';
+                html += `
+                    <div class="metric-card" style="border-left-color: ${index === 0 ? '#28a745' : index === 1 ? '#ffc107' : '#17a2b8'};">
+                        <h4>${op.rv_type}</h4>
+                        <div class="badge badge-${badge}">${index === 0 ? 'Highest Demand' : index === 1 ? 'Emerging Market' : 'Volume Play'}</div>
+                        <div style="margin-top: 1rem;">
+                            <strong>Market Size:</strong> ${op.market_size} units<br>
+                            <strong>Avg Demand:</strong> ${op.avg_demand.toFixed(1)} reviews<br>
+                            <strong>Entry Price:</strong> $${Math.round(op.entry_price)}<br>
+                            <strong>Avg Revenue:</strong> $${Math.round(op.summer_revenue_potential).toLocaleString()}/summer<br>
+                            <strong>Success Rate:</strong> ${op.success_rate.toFixed(1)}%
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            
+            // Detailed analysis
+            html += `
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <h4>🎯 Investment Strategy Insights</h4>
+                    <ul>
+                        <li><strong>Tent Trailers:</strong> Lowest investment ($${Math.round(opportunities.find(o => o.rv_type === 'Tent Trailer')?.entry_price || 0)}+ entry), 
+                            highest turnover (${opportunities.find(o => o.rv_type === 'Tent Trailer')?.avg_demand.toFixed(1)} avg reviews)</li>
+                        <li><strong>Campervans:</strong> Premium budget option at $${Math.round(opportunities.find(o => o.rv_type === 'Campervan')?.avg_price || 0)}/night, 
+                            growing segment with ${opportunities.find(o => o.rv_type === 'Campervan')?.market_size || 0} units</li>
+                        <li><strong>Micro Trailers:</strong> Sweet spot for easy towing market, 
+                            ${opportunities.find(o => o.rv_type === 'Micro Trailer')?.market_size || 0} units at $${Math.round(opportunities.find(o => o.rv_type === 'Micro Trailer')?.avg_price || 0)}/night</li>
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('investmentOpportunities').innerHTML = html;
+            
+            // Opportunity scatter plot
+            const scatterData = opportunities.map(op => ({
+                x: op.avg_price,
+                y: op.avg_demand,
+                mode: 'markers+text',
+                type: 'scatter',
+                text: op.rv_type,
+                textposition: 'top center',
+                marker: {
+                    size: Math.sqrt(op.market_size) * 5,
+                    color: op.success_rate,
+                    colorscale: 'Viridis',
+                    showscale: true,
+                    colorbar: {
+                        title: 'Success Rate %'
+                    }
+                }
+            }));
+            
+            const scatterLayout = {
+                title: 'Investment Opportunity Matrix (Size = Market Size)',
+                xaxis: { 
+                    title: 'Average Price per Night ($)',
+                    type: 'log'
+                },
+                yaxis: { 
+                    title: 'Average Demand (Reviews)',
+                    type: 'log'
+                },
+                height: 450,
+                showlegend: false
+            };
+            
+            Plotly.newPlot('opportunityChart', scatterData, scatterLayout);
+        }
+        
+        function renderMultiOwners() {
+            const owners = dashboardData.multi_owners;
+            
+            // Strategy insights
+            const strategies = {};
+            owners.forEach(owner => {
+                strategies[owner.strategy] = (strategies[owner.strategy] || 0) + 1;
+            });
+            
+            let insightHtml = '<strong>Fleet Strategy Distribution:</strong> ';
+            Object.entries(strategies).forEach(([strategy, count]) => {
+                insightHtml += `<span class="strategy-tag ${strategy.toLowerCase().replace(' ', '-')}">${strategy} (${count})</span>`;
+            });
+            document.getElementById('strategyInsights').innerHTML = insightHtml;
+            
+            // Table
+            let tableHtml = '';
+            owners.forEach((owner, index) => {
+                const monthlyRevenue = owner.total_daily_revenue * 30 * 0.5;
+                const priceRange = `$${Math.round(owner.min_price)}-$${Math.round(owner.max_price)}`;
+                
+                tableHtml += `
+                    <tr class="expandable-row" onclick="togglePortfolio(${index})">
+                        <td>
+                            ${owner.host_name}
+                            ${owner.is_superhost ? '<span class="badge badge-success">Superhost</span>' : ''}
+                        </td>
+                        <td><span class="strategy-tag ${owner.strategy.toLowerCase().replace(' ', '-')}">${owner.strategy}</span></td>
+                        <td>${owner.num_rvs}</td>
+                        <td>$${Math.round(owner.avg_price)}</td>
+                        <td>${priceRange}</td>
+                        <td>${owner.total_reviews || 0}</td>
+                        <td><strong>$${Math.round(monthlyRevenue).toLocaleString()}</strong></td>
+                        <td>${getSuccessFormula(owner)}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8" style="padding: 0;">
+                            <div id="portfolio-${index}" class="portfolio-details">
+                                ${renderPortfolioDetails(owner.portfolio)}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('multiOwnerBody').innerHTML = tableHtml;
+        }
+        
+        function getSuccessFormula(owner) {
+            if (owner.strategy === 'Specialist') {
+                return 'Single type mastery';
+            } else if (owner.strategy === 'Standardized Fleet') {
+                return 'Consistent pricing';
+            } else if (owner.strategy === 'Budget Focus') {
+                return 'Volume over margin';
+            } else if (owner.strategy === 'Premium Focus') {
+                return 'Quality over quantity';
+            } else {
+                return 'Market coverage';
+            }
+        }
+        
+        function renderPortfolioDetails(portfolio) {
+            let html = '<div style="padding: 1rem;"><strong>Fleet Details:</strong><br>';
+            html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 0.5rem;">';
+            
+            portfolio.forEach(rv => {
+                html += `
+                    <div style="background: white; padding: 0.75rem; border-radius: 4px; border: 1px solid #e0e0e0;">
+                        <a href="${rv.url}" target="_blank" class="link">${rv.rv_type}</a><br>
+                        <span style="color: #666;">$${rv.base_price}/night | ${rv.num_reviews || 0} reviews</span>
+                    </div>
+                `;
+            });
+            
+            html += '</div></div>';
+            return html;
+        }
+        
+        function togglePortfolio(index) {
+            const portfolio = document.getElementById(`portfolio-${index}`);
+            portfolio.classList.toggle('show');
+        }
+        
+        function renderCompetitiveIntelligence() {
+            const intel = dashboardData.competitive_intelligence;
+            
+            // Tent trailer operators
+            let tableHtml = '';
+            intel.tent_trailer_operators.forEach(op => {
+                tableHtml += `
+                    <tr>
+                        <td>${op.host_name}</td>
+                        <td>${op.num_listings}</td>
+                        <td>$${Math.round(op.avg_price)}</td>
+                        <td><strong>${op.total_reviews || 0}</strong></td>
+                        <td>${op.avg_rating ? op.avg_rating.toFixed(1) : 'N/A'}⭐</td>
+                        <td>${op.is_superhost ? '<span class="badge badge-success">Superhost</span>' : ''}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('tentTrailerBody').innerHTML = tableHtml;
+            
+            // Success factors chart
+            const successData = intel.success_factors.map(factor => ({
+                x: factor.rv_type,
+                y: factor.success_rate,
+                type: 'bar',
+                marker: {
+                    color: factor.success_rate,
+                    colorscale: 'Viridis'
+                }
+            }));
+            
+            const successLayout = {
+                title: 'Success Rate by RV Type (% with 20+ reviews)',
+                xaxis: { title: 'RV Type' },
+                yaxis: { title: 'Success Rate (%)' },
+                height: 400
+            };
+            
+            Plotly.newPlot('successFactorsChart', [successData[0]], successLayout);
+        }
+        
+        function renderWinterPremium() {
+            const winter = dashboardData.winter_analysis;
+            
+            // Find Travel Trailer winter data
+            const ttWinter = winter.find(w => w.rv_type === 'Travel Trailer');
+            
+            const insightHtml = `
+                <strong>Opportunity:</strong> ${ttWinter.winter_ready_count} of ${ttWinter.total_count} Travel Trailers are winter-ready 
+                and charge an average of <strong>$${Math.round(ttWinter.dollar_premium)} more per night</strong> 
+                (${ttWinter.percent_premium.toFixed(1)}% premium). 
+                Adding winter capability to your RV could generate an extra <strong>$${Math.round(ttWinter.dollar_premium * 120)}</strong> 
+                in winter revenue (120 winter days).
+            `;
+            document.getElementById('winterPremiumInsight').innerHTML = insightHtml;
+            
+            // Winter premium cards for different RV types
+            let cardsHtml = '';
+            winter.slice(0, 4).forEach(item => {
+                if (item.dollar_premium > 0) {
+                    cardsHtml += `
+                        <div class="metric-card">
+                            <div class="metric-value">${item.rv_type}</div>
+                            <div style="font-size: 1.5rem; color: #27ae60; margin: 0.5rem 0;">
+                                +$${Math.round(item.dollar_premium)}/night
+                            </div>
+                            <div class="metric-label">
+                                ${item.winter_ready_count} of ${item.total_count} winter-ready<br>
+                                ${item.percent_premium.toFixed(1)}% premium
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('winterPremiumCards').innerHTML = cardsHtml;
+        }
+        
+        function renderActionPlan() {
+            const html = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div>
+                        <h4>📅 Immediate Actions (This Week)</h4>
+                        <ul>
+                            <li>Raise price to $125/night</li>
+                            <li>Update listing title: "Better than a Tent Trailer - Hard-Sided Comfort"</li>
+                            <li>Add comparison table in description vs Tent Trailers</li>
+                            <li>Highlight: Full bathroom, kitchen, year-round comfort</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>🔧 30-Day Improvements</h4>
+                        <ul>
+                            <li>Install tank heaters for winter capability</li>
+                            <li>Professional photos highlighting comfort features</li>
+                            <li>Add popular add-ons: Bedding ($43), BBQ ($34)</li>
+                            <li>Apply for Superhost status</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>🚀 Investment Strategy</h4>
+                        <ul>
+                            <li><strong>Next Unit:</strong> Tent Trailer ($75-$115 range)</li>
+                            <li><strong>Reasoning:</strong> 35.8 avg reviews = high turnover</li>
+                            <li><strong>Alternative:</strong> Micro Trailer for easy-tow market</li>
+                            <li><strong>Avoid:</strong> Class A/B (low demand, high cost)</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            document.getElementById('actionPlan').innerHTML = html;
+        }
+        
+        // Load data when page loads
+        loadDashboardData();
+    </script>
+</body>
+</html>

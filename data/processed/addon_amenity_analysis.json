@@ -1,0 +1,386 @@
+{
+  "top_addons": [
+    {
+      "name": "Propane Refill Prepayment",
+      "frequency": 346,
+      "avg_price": 48.23,
+      "min_price": 10.0,
+      "max_price": 308.0,
+      "avg_revenue_30pct_attach": 14.47
+    },
+    {
+      "name": "Emptying Septic Prepayment",
+      "frequency": 340,
+      "avg_price": 78.82,
+      "min_price": 5.0,
+      "max_price": 404.0,
+      "avg_revenue_30pct_attach": 23.65
+    },
+    {
+      "name": "Portable BBQ",
+      "frequency": 222,
+      "avg_price": 34.14,
+      "min_price": 1.0,
+      "max_price": 351.0,
+      "avg_revenue_30pct_attach": 10.24
+    },
+    {
+      "name": "Bedding and Linens",
+      "frequency": 221,
+      "avg_price": 43.37,
+      "min_price": 1.0,
+      "max_price": 200.0,
+      "avg_revenue_30pct_attach": 13.01
+    },
+    {
+      "name": "Portable Generator",
+      "frequency": 151,
+      "avg_price": 81.59,
+      "min_price": 1.0,
+      "max_price": 300.0,
+      "avg_revenue_30pct_attach": 24.48
+    },
+    {
+      "name": "YYC",
+      "frequency": 110,
+      "avg_price": 111.85,
+      "min_price": 25.0,
+      "max_price": 350.0,
+      "avg_revenue_30pct_attach": 33.56
+    },
+    {
+      "name": "Fuel Refill Prepayment",
+      "frequency": 104,
+      "avg_price": 227.29,
+      "min_price": 15.0,
+      "max_price": 480.0,
+      "avg_revenue_30pct_attach": 68.19
+    },
+    {
+      "name": "Bike Rack",
+      "frequency": 87,
+      "avg_price": 27.71,
+      "min_price": 10.0,
+      "max_price": 251.0,
+      "avg_revenue_30pct_attach": 8.31
+    },
+    {
+      "name": "Wifi",
+      "frequency": 20,
+      "avg_price": 19.25,
+      "min_price": 10.0,
+      "max_price": 50.0,
+      "avg_revenue_30pct_attach": 5.78
+    },
+    {
+      "name": "Portable GPS",
+      "frequency": 12,
+      "avg_price": 7.92,
+      "min_price": 5.0,
+      "max_price": 25.0,
+      "avg_revenue_30pct_attach": 2.38
+    },
+    {
+      "name": "Propane Fire Pit",
+      "frequency": 11,
+      "avg_price": 20.64,
+      "min_price": 2.0,
+      "max_price": 40.0,
+      "avg_revenue_30pct_attach": 6.19
+    },
+    {
+      "name": "Bath Towel",
+      "frequency": 10,
+      "avg_price": 37.5,
+      "min_price": 25.0,
+      "max_price": 50.0,
+      "avg_revenue_30pct_attach": 11.25
+    }
+  ],
+  "amenity_adoption": [
+    {
+      "name": "Refrigerator",
+      "total_listings": 521,
+      "adoption_pct": 86.4,
+      "avg_price_with": 178.83301343570056,
+      "avg_price_without": 156.125,
+      "price_premium": 14.544764410376665
+    },
+    {
+      "name": "Kitchen sink",
+      "total_listings": 519,
+      "adoption_pct": 86.1,
+      "avg_price_with": 178.67437379576108,
+      "avg_price_without": 161.03846153846155,
+      "price_premium": 10.951366579646237
+    },
+    {
+      "name": "Heater",
+      "total_listings": 516,
+      "adoption_pct": 85.6,
+      "avg_price_with": 178.9670542635659,
+      "avg_price_without": 157.6551724137931,
+      "price_premium": 13.518035294037855
+    },
+    {
+      "name": "Stove range",
+      "total_listings": 514,
+      "adoption_pct": 85.2,
+      "avg_price_with": 178.38326848249028,
+      "avg_price_without": 168.70967741935485,
+      "price_premium": 5.733868507785811
+    },
+    {
+      "name": "Dining table",
+      "total_listings": 501,
+      "adoption_pct": 83.1,
+      "avg_price_with": 178.6746506986028,
+      "avg_price_without": 168.25,
+      "price_premium": 6.195929092780261
+    },
+    {
+      "name": "Toilet",
+      "total_listings": 490,
+      "adoption_pct": 81.3,
+      "avg_price_with": 181.02244897959184,
+      "avg_price_without": 149.4181818181818,
+      "price_premium": 21.1515538315594
+    },
+    {
+      "name": "Air conditioner",
+      "total_listings": 488,
+      "adoption_pct": 80.9,
+      "avg_price_with": 181.20696721311475,
+      "avg_price_without": 148.94736842105263,
+      "price_premium": 21.658387881596486
+    },
+    {
+      "name": "Inside shower",
+      "total_listings": 476,
+      "adoption_pct": 78.9,
+      "avg_price_with": 181.02941176470588,
+      "avg_price_without": 155.7826086956522,
+      "price_premium": 16.206432335702893
+    },
+    {
+      "name": "Freezer",
+      "total_listings": 473,
+      "adoption_pct": 78.4,
+      "avg_price_with": 180.7674418604651,
+      "avg_price_without": 158.55555555555554,
+      "price_premium": 14.008898160069116
+    },
+    {
+      "name": "Microwave",
+      "total_listings": 469,
+      "adoption_pct": 77.8,
+      "avg_price_with": 180.84221748400853,
+      "avg_price_without": 159.26315789473685,
+      "price_premium": 13.549310383217517
+    },
+    {
+      "name": "Family friendly",
+      "total_listings": 457,
+      "adoption_pct": 75.8,
+      "avg_price_with": 178.84901531728664,
+      "avg_price_without": 172.5568181818182,
+      "price_premium": 3.646449443011024
+    },
+    {
+      "name": "Awning",
+      "total_listings": 450,
+      "adoption_pct": 74.6,
+      "avg_price_with": 177.34222222222223,
+      "avg_price_without": 180.1578947368421,
+      "price_premium": -1.5628915506216035
+    },
+    {
+      "name": "Radio",
+      "total_listings": 450,
+      "adoption_pct": 74.6,
+      "avg_price_with": 183.93777777777777,
+      "avg_price_without": 148.9157894736842,
+      "price_premium": 23.517981825750244
+    },
+    {
+      "name": "Camping chairs",
+      "total_listings": 390,
+      "adoption_pct": 64.7,
+      "avg_price_with": 186.81794871794872,
+      "avg_price_without": 155.2258064516129,
+      "price_premium": 20.35237760300106
+    },
+    {
+      "name": "Tow hitch",
+      "total_listings": 384,
+      "adoption_pct": 63.7,
+      "avg_price_with": 176.36458333333334,
+      "avg_price_without": 181.33540372670808,
+      "price_premium": -2.741229948050461
+    },
+    {
+      "name": "Leveling jacks",
+      "total_listings": 366,
+      "adoption_pct": 60.7,
+      "avg_price_with": 161.03551912568307,
+      "avg_price_without": 212.17877094972067,
+      "price_premium": -24.103849595847105
+    },
+    {
+      "name": "USB input",
+      "total_listings": 349,
+      "adoption_pct": 57.9,
+      "avg_price_with": 183.2951289398281,
+      "avg_price_without": 168.10714285714286,
+      "price_premium": 9.03470597652829
+    },
+    {
+      "name": "Aux input",
+      "total_listings": 344,
+      "adoption_pct": 57.0,
+      "avg_price_with": 184.1656976744186,
+      "avg_price_without": 166.99502487562188,
+      "price_premium": 10.282146316386044
+    },
+    {
+      "name": "Oven",
+      "total_listings": 340,
+      "adoption_pct": 56.4,
+      "avg_price_with": 180.73235294117646,
+      "avg_price_without": 173.02439024390245,
+      "price_premium": 4.4548417055009
+    },
+    {
+      "name": "Outside shower",
+      "total_listings": 318,
+      "adoption_pct": 52.7,
+      "avg_price_with": 183.99056603773585,
+      "avg_price_without": 169.20704845814979,
+      "price_premium": 8.736939574501523
+    }
+  ],
+  "tier_requirements": [
+    {
+      "amenity": "Toilet",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "TV & DVD",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Solar",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Refrigerator",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Pet friendly",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Microwave",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Kitchen sink",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Inside shower",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Heater",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Camping chairs",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Backup camera",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    },
+    {
+      "amenity": "Air conditioner",
+      "budget_pct": 100.0,
+      "mid_pct": 100.0,
+      "upper_pct": 100.0,
+      "premium_pct": 100.0
+    }
+  ],
+  "pet_analysis": [
+    {
+      "rv_type": "Class A",
+      "pet_friendly_count": 6,
+      "total_count": 12,
+      "pet_friendly_pct": 50.0,
+      "avg_price_pet": 330.1666666666667,
+      "avg_price_no_pet": 357.5,
+      "pet_premium": -7.645687645687637
+    },
+    {
+      "rv_type": "Class B",
+      "pet_friendly_count": 6,
+      "total_count": 12,
+      "pet_friendly_pct": 50.0,
+      "avg_price_pet": 280.0,
+      "avg_price_no_pet": 280.0,
+      "pet_premium": 0.0
+    },
+    {
+      "rv_type": "Class C",
+      "pet_friendly_count": 32,
+      "total_count": 93,
+      "pet_friendly_pct": 34.4,
+      "avg_price_pet": 263.90625,
+      "avg_price_no_pet": 280.8032786885246,
+      "pet_premium": -6.017390098663089
+    },
+    {
+      "rv_type": "Travel Trailer",
+      "pet_friendly_count": 258,
+      "total_count": 394,
+      "pet_friendly_pct": 65.5,
+      "avg_price_pet": 144.7170542635659,
+      "avg_price_no_pet": 145.98529411764707,
+      "pet_premium": -0.8687449388286472
+    }
+  ]
+}

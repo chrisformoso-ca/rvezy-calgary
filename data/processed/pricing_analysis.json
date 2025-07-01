@@ -1,0 +1,15 @@
+{
+  "current_price": 97,
+  "market_percentile": 5.228758169934641,
+  "comparable_avg": 138.0,
+  "recommended_price": 138.0,
+  "revenue_increase_potential": 42.26804123711341,
+  "market_stats": {
+    "min": 75.0,
+    "q1": 120.0,
+    "median": 138.0,
+    "avg": 141.44444444444446,
+    "q3": 155.0,
+    "max": 288.0
+  }
+}

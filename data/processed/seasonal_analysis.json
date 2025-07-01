@@ -1,0 +1,228 @@
+{
+  "winter_ready_analysis": [
+    {
+      "rv_type": "Travel Trailer",
+      "total_count": 394,
+      "winter_ready_count": 62,
+      "winter_ready_pct": 15.7,
+      "winter_avg_price": 151.7741935483871,
+      "regular_avg_price": 147.47418079816396,
+      "winter_premium_pct": 2.915773274311806
+    },
+    {
+      "rv_type": "Class C",
+      "total_count": 93,
+      "winter_ready_count": 38,
+      "winter_ready_pct": 40.9,
+      "winter_avg_price": 275.42105263157896,
+      "regular_avg_price": 277.63525390625,
+      "winter_premium_pct": -0.7975216560281329
+    },
+    {
+      "rv_type": "Class B",
+      "total_count": 12,
+      "winter_ready_count": 4,
+      "winter_ready_pct": 33.3,
+      "winter_avg_price": 355.5,
+      "regular_avg_price": 292.296,
+      "winter_premium_pct": 21.62328598407095
+    },
+    {
+      "rv_type": "Class A",
+      "total_count": 12,
+      "winter_ready_count": 4,
+      "winter_ready_pct": 33.3,
+      "winter_avg_price": 362.25,
+      "regular_avg_price": 347.29065743944636,
+      "winter_premium_pct": 4.307441689001368
+    }
+  ],
+  "revenue_scenarios": [
+    {
+      "category": "Regular",
+      "rv_type": "Class A",
+      "count": 8,
+      "avg_price": 334.625,
+      "summer_revenue_70pct": 28108.5,
+      "summer_revenue_50pct": 20077.5,
+      "year_round_revenue": 37143.375
+    },
+    {
+      "category": "Regular",
+      "rv_type": "Class C",
+      "count": 55,
+      "avg_price": 274.6909090909091,
+      "summer_revenue_70pct": 23074.03636363636,
+      "summer_revenue_50pct": 16481.454545454544,
+      "year_round_revenue": 30490.690909090907
+    },
+    {
+      "category": "Regular",
+      "rv_type": "Class B",
+      "count": 8,
+      "avg_price": 242.25,
+      "summer_revenue_70pct": 20349.0,
+      "summer_revenue_50pct": 14535.0,
+      "year_round_revenue": 26889.75
+    },
+    {
+      "category": "Regular",
+      "rv_type": null,
+      "count": 22,
+      "avg_price": 195.3181818181818,
+      "summer_revenue_70pct": 16406.727272727272,
+      "summer_revenue_50pct": 11719.090909090908,
+      "year_round_revenue": 21680.31818181818
+    },
+    {
+      "category": "Regular",
+      "rv_type": "Travel Trailer",
+      "count": 332,
+      "avg_price": 143.91867469879517,
+      "summer_revenue_70pct": 12089.168674698793,
+      "summer_revenue_50pct": 8635.12048192771,
+      "year_round_revenue": 15974.972891566262
+    },
+    {
+      "category": "Winter-Ready",
+      "rv_type": "Class A",
+      "count": 4,
+      "avg_price": 362.25,
+      "summer_revenue_70pct": 30428.999999999996,
+      "summer_revenue_50pct": 21735.0,
+      "year_round_revenue": 52526.25
+    },
+    {
+      "category": "Winter-Ready",
+      "rv_type": "Class B",
+      "count": 4,
+      "avg_price": 355.5,
+      "summer_revenue_70pct": 29861.999999999996,
+      "summer_revenue_50pct": 21330.0,
+      "year_round_revenue": 51547.5
+    },
+    {
+      "category": "Winter-Ready",
+      "rv_type": "Class C",
+      "count": 38,
+      "avg_price": 275.42105263157896,
+      "summer_revenue_70pct": 23135.36842105263,
+      "summer_revenue_50pct": 16525.263157894737,
+      "year_round_revenue": 39936.05263157895
+    },
+    {
+      "category": "Winter-Ready",
+      "rv_type": null,
+      "count": 12,
+      "avg_price": 197.58333333333334,
+      "summer_revenue_70pct": 16597.0,
+      "summer_revenue_50pct": 11855.0,
+      "year_round_revenue": 28649.583333333336
+    },
+    {
+      "category": "Winter-Ready",
+      "rv_type": "Travel Trailer",
+      "count": 62,
+      "avg_price": 151.7741935483871,
+      "summer_revenue_70pct": 12749.032258064515,
+      "summer_revenue_50pct": 9106.451612903225,
+      "year_round_revenue": 22007.25806451613
+    }
+  ],
+  "occupancy_indicators": [
+    {
+      "activity_level": "High Activity (10+ reviews/year)",
+      "count": 260,
+      "avg_price": 160.8230769230769,
+      "avg_total_reviews": 40.292307692307695,
+      "avg_rating": 6.799615384615403,
+      "winter_ready_pct": 2.307692307692308
+    },
+    {
+      "activity_level": "Medium Activity (5-10 reviews/year)",
+      "count": 626,
+      "avg_price": 151.07987220447285,
+      "avg_total_reviews": 31.5,
+      "avg_rating": 7.030191693290751,
+      "winter_ready_pct": 0.6389776357827476
+    },
+    {
+      "activity_level": "Low Activity (2-5 reviews/year)",
+      "count": 2075,
+      "avg_price": 182.93638554216867,
+      "avg_total_reviews": 19.481927710843372,
+      "avg_rating": 51.044144578313464,
+      "winter_ready_pct": 1.2048192771084338
+    },
+    {
+      "activity_level": "Very Low Activity (<2 reviews/year)",
+      "count": 3859,
+      "avg_price": 199.4293858512568,
+      "avg_total_reviews": 8.763410209898938,
+      "avg_rating": 5.610080331692179,
+      "winter_ready_pct": 1.1920186576833378
+    }
+  ],
+  "winter_ready_models": [
+    {
+      "rv_type": "Class C",
+      "rv_make": "Jayco",
+      "rv_model": "Melbourne",
+      "count": 2,
+      "avg_price": 331.0,
+      "avg_reviews": 10.5,
+      "avg_rating": 4.85,
+      "est_annual_revenue_35pct": 42285.0
+    },
+    {
+      "rv_type": "Class C",
+      "rv_make": "Thor",
+      "rv_model": "Motor Coach 23A",
+      "count": 3,
+      "avg_price": 288.0,
+      "avg_reviews": 14.0,
+      "avg_rating": 24.866666666666664,
+      "est_annual_revenue_35pct": 36792.0
+    },
+    {
+      "rv_type": "Class C",
+      "rv_make": "Forest",
+      "rv_model": "River Sunseeker",
+      "count": 4,
+      "avg_price": 241.5,
+      "avg_reviews": 25.5,
+      "avg_rating": 4.7,
+      "est_annual_revenue_35pct": 30852.0
+    },
+    {
+      "rv_type": "Class C",
+      "rv_make": "Adventurer",
+      "rv_model": "Manufacturing 24DS",
+      "count": 2,
+      "avg_price": 219.5,
+      "avg_reviews": 7.0,
+      "avg_rating": 5.0,
+      "est_annual_revenue_35pct": 28041.0
+    },
+    {
+      "rv_type": null,
+      "rv_make": "Ford",
+      "rv_model": "Transit",
+      "count": 3,
+      "avg_price": 203.33333333333334,
+      "avg_reviews": 19.0,
+      "avg_rating": 4.95,
+      "est_annual_revenue_35pct": 25976.0
+    },
+    {
+      "rv_type": "Travel Trailer",
+      "rv_make": "Keystone",
+      "rv_model": "Hideout",
+      "count": 3,
+      "avg_price": 188.0,
+      "avg_reviews": 24.0,
+      "avg_rating": 14.85,
+      "est_annual_revenue_35pct": 24017.0
+    }
+  ]
+}

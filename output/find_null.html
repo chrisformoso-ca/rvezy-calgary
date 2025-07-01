@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Null Values</title>
+</head>
+<body>
+    <h1>Finding Null Values in Data</h1>
+    <div id="output"></div>
+    
+    <script>
+        fetch('comprehensive_dashboard_data.json')
+            .then(response => response.json())
+            .then(data => {
+                const output = document.getElementById('output');
+                let html = '<h2>Checking all numeric fields for null values:</h2>';
+                
+                // Check market overview
+                html += '<h3>Market Overview:</h3>';
+                data.market_overview.forEach((item, idx) => {
+                    Object.keys(item).forEach(key => {
+                        if (item[key] === null || item[key] === undefined) {
+                            html += `<p style="color:red">market_overview[${idx}].${key} is ${item[key]}</p>`;
+                        }
+                    });
+                });
+                
+                // Check investment opportunities
+                html += '<h3>Investment Opportunities:</h3>';
+                data.investment_opportunities.forEach((item, idx) => {
+                    Object.keys(item).forEach(key => {
+                        if (item[key] === null || item[key] === undefined) {
+                            html += `<p style="color:red">investment_opportunities[${idx}].${key} is ${item[key]}</p>`;
+                        }
+                    });
+                });
+                
+                // Check multi owners
+                html += '<h3>Multi Owners:</h3>';
+                data.multi_owners.forEach((item, idx) => {
+                    Object.keys(item).forEach(key => {
+                        if (item[key] === null || item[key] === undefined) {
+                            html += `<p style="color:red">multi_owners[${idx}].${key} is ${item[key]}</p>`;
+                        }
+                    });
+                });
+                
+                // Check price by capacity
+                html += '<h3>Price by Capacity:</h3>';
+                if (data.price_by_capacity) {
+                    data.price_by_capacity.forEach((item, idx) => {
+                        Object.keys(item).forEach(key => {
+                            if (item[key] === null || item[key] === undefined) {
+                                html += `<p style="color:red">price_by_capacity[${idx}].${key} is ${item[key]}</p>`;
+                            }
+                        });
+                    });
+                }
+                
+                output.innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('output').innerHTML = '<p style="color:red">Error: ' + error + '</p>';
+            });
+    </script>
+</body>
+</html>

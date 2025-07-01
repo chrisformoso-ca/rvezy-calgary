@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVezy Calgary Market Analysis Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+        }
+        
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+        
+        .metric-label {
+            color: #666;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .alert-success {
+            background: #d1f2eb;
+            border-color: #5cb85c;
+            color: #2d6e2d;
+        }
+        
+        .alert strong {
+            font-weight: 600;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .link:hover {
+            text-decoration: underline;
+        }
+        
+        .expandable-row {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .expandable-row:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .portfolio-details {
+            display: none;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+        
+        .portfolio-details.show {
+            display: block;
+        }
+        
+        .chart-container {
+            margin: 2rem 0;
+            min-height: 400px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .superhost-badge {
+            background: #5cb85c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .winter-badge {
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        
+        .price-premium {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .price-discount {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .tier-requirements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tier-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            border-top: 3px solid #667eea;
+        }
+        
+        .tier-card h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .tier-card ul {
+            margin: 0;
+            padding-left: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            table {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RVezy Calgary Market Analysis Dashboard</h1>
+        <p>Data-driven insights for RV rental optimization and investment</p>
+    </div>
+
+    <div class="container">
+        <div id="loading" class="loading">Loading dashboard data...</div>
+        <div id="dashboard" style="display: none;">
+            
+            <!-- Executive Summary -->
+            <div class="section">
+                <h2>📊 Executive Summary</h2>
+                <div id="yourListingAlert" class="alert alert-success"></div>
+                
+                <div class="metrics-grid" id="marketMetrics"></div>
+            </div>
+
+            <!-- Your Listing Analysis -->
+            <div class="section">
+                <h2>🎯 Your Listing Analysis</h2>
+                <div id="yourListingAnalysis"></div>
+            </div>
+
+            <!-- Price Distribution -->
+            <div class="section">
+                <h2>📊 Price Distribution by RV Type</h2>
+                <p>Visualizing where your $97/night Travel Trailer stands in the market</p>
+                <div id="priceDistributionChart" class="chart-container"></div>
+                <div id="priceHistogramChart" class="chart-container"></div>
+            </div>
+
+            <!-- Top Performers -->
+            <div class="section">
+                <h2>🏆 Top Performing Listings</h2>
+                <p>Most reviewed listings indicate highest booking frequency. Click listing names to view on RVezy.</p>
+                <div class="table-responsive">
+                    <table id="topListingsTable">
+                        <thead>
+                            <tr>
+                                <th>Listing</th>
+                                <th>Type</th>
+                                <th>Price/Night</th>
+                                <th>Reviews</th>
+                                <th>Rating</th>
+                                <th>Location</th>
+                                <th>Host</th>
+                                <th>Summer Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topListingsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Revenue by Sleeping Capacity -->
+            <div class="section">
+                <h2>💰 Revenue by Sleeping Capacity</h2>
+                <div id="revenueBySleeepsChart" class="chart-container"></div>
+                <div id="sleepsScatterChart" class="chart-container"></div>
+            </div>
+
+            <!-- Multi-Owner Analysis -->
+            <div class="section">
+                <h2>🏢 Multi-RV Owner Analysis</h2>
+                <p>Click on rows to see full portfolio details.</p>
+                <div class="table-responsive">
+                    <table id="multiOwnerTable">
+                        <thead>
+                            <tr>
+                                <th>Owner</th>
+                                <th>RVs</th>
+                                <th>Avg Fleet Age</th>
+                                <th>Avg Price</th>
+                                <th>Total Daily Revenue</th>
+                                <th>Monthly (50%)</th>
+                                <th>Total Reviews</th>
+                                <th>Strategy</th>
+                            </tr>
+                        </thead>
+                        <tbody id="multiOwnerBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Winter-Ready Premium -->
+            <div class="section">
+                <h2>❄️ Winter-Ready Premium Analysis</h2>
+                <p>"Full-Winter rental available" means the RV is equipped and available for cold-weather camping.</p>
+                <div id="winterPremiumCards" class="metrics-grid"></div>
+            </div>
+
+            <!-- Add-Ons Comprehensive Analysis -->
+            <div class="section">
+                <h2>💸 Add-On Revenue Opportunities</h2>
+                <div class="table-responsive">
+                    <table id="addonsTable">
+                        <thead>
+                            <tr>
+                                <th>Add-On</th>
+                                <th>Listings Offering</th>
+                                <th>Min Price</th>
+                                <th>Avg Price</th>
+                                <th>Median Price</th>
+                                <th>Max Price</th>
+                                <th>RV Types</th>
+                            </tr>
+                        </thead>
+                        <tbody id="addonsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Top RVs by Revenue -->
+            <div class="section">
+                <h2>🚐 Top RVs by Revenue Potential</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterRVs('all')">All Types</button>
+                    <button class="filter-btn" onclick="filterRVs('Travel Trailer')">Travel Trailers</button>
+                    <button class="filter-btn" onclick="filterRVs('Class C')">Class C</button>
+                    <button class="filter-btn" onclick="filterRVs('Class B')">Class B</button>
+                    <button class="filter-btn" onclick="filterRVs('Class A')">Class A</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="topRVsTable">
+                        <thead>
+                            <tr>
+                                <th>RV</th>
+                                <th>Type</th>
+                                <th>Price/Night</th>
+                                <th>Sleeps</th>
+                                <th>Reviews</th>
+                                <th>Rating</th>
+                                <th>Host</th>
+                                <th>Summer Revenue</th>
+                                <th>Annual (35%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topRVsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Price Tier Requirements -->
+            <div class="section">
+                <h2>✅ Non-Negotiable Amenities by Price Tier</h2>
+                <div id="tierRequirements" class="tier-requirements"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let dashboardData = null;
+        let currentRVFilter = 'all';
+        
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('dashboard_data.json');
+                dashboardData = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                
+                renderDashboard();
+            } catch (error) {
+                document.getElementById('loading').innerHTML = 
+                    '<div class="error">Error loading dashboard data: ' + error.message + '</div>';
+            }
+        }
+        
+        function renderDashboard() {
+            renderMarketMetrics();
+            renderYourListingAnalysis();
+            renderPriceDistribution();
+            renderTopListings();
+            renderRevenueBySleeeps();
+            renderMultiOwners();
+            renderWinterPremium();
+            renderAddons();
+            renderTopRVs();
+            renderTierRequirements();
+        }
+        
+        function renderMarketMetrics() {
+            const overview = dashboardData.market_overview;
+            const metricsHtml = `
+                <div class="metric-card">
+                    <div class="metric-value">${overview.total_listings}</div>
+                    <div class="metric-label">Total Listings</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${overview.calgary_listings}</div>
+                    <div class="metric-label">Calgary Listings</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${overview.multi_owners}</div>
+                    <div class="metric-label">Multi-RV Owners</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$${Math.round(overview.avg_price)}</div>
+                    <div class="metric-label">Average Price/Night</div>
+                </div>
+            `;
+            document.getElementById('marketMetrics').innerHTML = metricsHtml;
+        }
+        
+        function renderYourListingAnalysis() {
+            const your = dashboardData.your_listing;
+            const alertHtml = `
+                <strong>🎯 Your Opportunity:</strong> Your $97/night listing is at the 
+                <strong>${your.percentile.toFixed(1)}th percentile</strong>. 
+                The average Travel Trailer is <strong>$${Math.round(your.avg_tt_price)}/night</strong>. 
+                Potential revenue increase: <strong>+${Math.round(your.revenue_increase_at_avg)}%</strong>!
+            `;
+            document.getElementById('yourListingAlert').innerHTML = alertHtml;
+            
+            const analysisHtml = `
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">${your.cheaper_count}</div>
+                        <div class="metric-label">Travel Trailers Cheaper Than Yours</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">$${Math.round(your.avg_tt_price)}</div>
+                        <div class="metric-label">Average Travel Trailer Price</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">$${your.min_tt_price} - $${your.max_tt_price}</div>
+                        <div class="metric-label">Travel Trailer Price Range</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">+$${Math.round((your.avg_tt_price - 97) * 120)}</div>
+                        <div class="metric-label">Summer Revenue Opportunity</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('yourListingAnalysis').innerHTML = analysisHtml;
+        }
+        
+        function renderTopListings() {
+            const tbody = document.getElementById('topListingsBody');
+            let html = '';
+            
+            dashboardData.top_listings.forEach(listing => {
+                const rvName = listing.rv_year ? 
+                    `${listing.rv_year} ${listing.rv_make || ''} ${listing.rv_model || ''}`.trim() : 
+                    listing.rv_type;
+                
+                html += `
+                    <tr>
+                        <td><a href="${listing.url}" target="_blank" class="link">${rvName}</a></td>
+                        <td>${listing.rv_type}</td>
+                        <td>$${listing.base_price}</td>
+                        <td><strong>${listing.num_reviews}</strong></td>
+                        <td>${listing.overall_rating ? listing.overall_rating.toFixed(1) : '-'}⭐</td>
+                        <td>${listing.location_city}</td>
+                        <td>
+                            ${listing.host_name}
+                            ${listing.is_superhost ? '<span class="superhost-badge">Superhost</span>' : ''}
+                        </td>
+                        <td>$${listing.summer_revenue_potential.toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        function renderRevenueBySleeeps() {
+            const sleepsData = dashboardData.revenue_by_sleeps;
+            
+            // Bar chart by sleeping capacity
+            const barTrace = {
+                x: sleepsData.map(d => `Sleeps ${d.sleeps}`),
+                y: sleepsData.map(d => d.avg_price),
+                type: 'bar',
+                marker: {
+                    color: sleepsData.map(d => d.avg_price),
+                    colorscale: 'Viridis'
+                },
+                text: sleepsData.map(d => `$${Math.round(d.avg_price)}`),
+                textposition: 'outside'
+            };
+            
+            const barLayout = {
+                title: 'Average Price by Sleeping Capacity',
+                xaxis: { title: 'Sleeping Capacity' },
+                yaxis: { title: 'Average Price per Night ($)' },
+                height: 400,
+                margin: { t: 40, b: 80 }
+            };
+            
+            Plotly.newPlot('revenueBySleeepsChart', [barTrace], barLayout);
+            
+            // Scatter plot
+            const scatterTrace = {
+                x: sleepsData.map(d => d.sleeps),
+                y: sleepsData.map(d => d.avg_price),
+                mode: 'markers',
+                type: 'scatter',
+                marker: {
+                    size: sleepsData.map(d => Math.sqrt(d.count) * 5),
+                    color: sleepsData.map(d => d.avg_reviews),
+                    colorscale: 'Viridis',
+                    showscale: true,
+                    colorbar: {
+                        title: 'Avg Reviews'
+                    }
+                },
+                text: sleepsData.map(d => 
+                    `Sleeps: ${d.sleeps}<br>` +
+                    `Avg Price: $${Math.round(d.avg_price)}<br>` +
+                    `Count: ${d.count}<br>` +
+                    `Avg Reviews: ${d.avg_reviews.toFixed(1)}`
+                ),
+                hoverinfo: 'text'
+            };
+            
+            const scatterLayout = {
+                title: 'Price vs Sleeping Capacity (Size = Number of Listings)',
+                xaxis: { title: 'Sleeping Capacity' },
+                yaxis: { title: 'Average Price per Night ($)' },
+                height: 400
+            };
+            
+            Plotly.newPlot('sleepsScatterChart', [scatterTrace], scatterLayout);
+        }
+        
+        function renderMultiOwners() {
+            const tbody = document.getElementById('multiOwnerBody');
+            let html = '';
+            
+            dashboardData.multi_owners.forEach((owner, index) => {
+                const monthlyRevenue = owner.total_daily_revenue * 30 * 0.5;
+                const fleetAge = owner.avg_fleet_age ? Math.round(owner.avg_fleet_age) : 'N/A';
+                const strategy = analyzeStrategy(owner);
+                
+                html += `
+                    <tr class="expandable-row" onclick="togglePortfolio(${index})">
+                        <td>
+                            ${owner.host_name}
+                            ${owner.is_superhost ? '<span class="superhost-badge">Superhost</span>' : ''}
+                        </td>
+                        <td><strong>${owner.num_rvs}</strong></td>
+                        <td>${fleetAge} years</td>
+                        <td>$${Math.round(owner.avg_price)}</td>
+                        <td>$${Math.round(owner.total_daily_revenue).toLocaleString()}</td>
+                        <td><strong>$${Math.round(monthlyRevenue).toLocaleString()}</strong></td>
+                        <td>${owner.total_reviews || 0}</td>
+                        <td>${strategy}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8" style="padding: 0;">
+                            <div id="portfolio-${index}" class="portfolio-details">
+                                ${renderPortfolio(owner.portfolio)}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        function analyzeStrategy(owner) {
+            const rvTypes = owner.rv_types.split(',');
+            const uniqueTypes = [...new Set(rvTypes)];
+            
+            if (uniqueTypes.length === 1) {
+                return `Specialized in ${uniqueTypes[0]}`;
+            } else if (owner.avg_price > 250) {
+                return 'Premium fleet';
+            } else if (owner.avg_price < 150) {
+                return 'Budget-focused';
+            } else {
+                return 'Diversified portfolio';
+            }
+        }
+        
+        function renderPortfolio(portfolio) {
+            let html = '<table style="width: 100%; margin: 0;">';
+            html += '<tr><th>RV</th><th>Type</th><th>Price</th><th>Reviews</th><th>Location</th><th>View</th></tr>';
+            
+            portfolio.forEach(rv => {
+                const rvName = rv.rv_year ? 
+                    `${rv.rv_year} ${rv.rv_make || ''} ${rv.rv_model || ''}`.trim() : 
+                    rv.rv_type;
+                
+                html += `
+                    <tr>
+                        <td>${rvName}</td>
+                        <td>${rv.rv_type}</td>
+                        <td>$${rv.base_price}</td>
+                        <td>${rv.num_reviews || 0}</td>
+                        <td>${rv.location_city}</td>
+                        <td><a href="${rv.url}" target="_blank" class="link">View →</a></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</table>';
+            return html;
+        }
+        
+        function togglePortfolio(index) {
+            const portfolio = document.getElementById(`portfolio-${index}`);
+            portfolio.classList.toggle('show');
+        }
+        
+        function renderWinterPremium() {
+            const winter = dashboardData.winter_analysis;
+            let html = '';
+            
+            winter.forEach(item => {
+                const premium = item.dollar_premium ? 
+                    `<span class="price-premium">+$${Math.round(item.dollar_premium)}/night</span>` : 
+                    '<span class="price-discount">No premium</span>';
+                
+                const percentPremium = item.percent_premium ? 
+                    `(+${item.percent_premium.toFixed(1)}%)` : '';
+                
+                html += `
+                    <div class="metric-card">
+                        <div class="metric-value">${item.rv_type}</div>
+                        <div class="winter-badge">Winter-Ready Premium</div>
+                        <div style="margin-top: 1rem; font-size: 1.2rem;">
+                            ${premium} ${percentPremium}
+                        </div>
+                        <div class="metric-label">
+                            ${item.winter_ready_count} of ${item.total_count} are winter-ready
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('winterPremiumCards').innerHTML = html;
+        }
+        
+        function renderAddons() {
+            const tbody = document.getElementById('addonsBody');
+            let html = '';
+            
+            dashboardData.addons.forEach(addon => {
+                html += `
+                    <tr>
+                        <td><strong>${addon.name}</strong></td>
+                        <td>${addon.listings_count}</td>
+                        <td>$${addon.min_price ? Math.round(addon.min_price) : 0}</td>
+                        <td>$${addon.avg_price ? Math.round(addon.avg_price) : 0}</td>
+                        <td>$${addon.median_price ? Math.round(addon.median_price) : 0}</td>
+                        <td>$${addon.max_price ? Math.round(addon.max_price) : 0}</td>
+                        <td style="font-size: 0.85rem;">${addon.rv_types_offering || 'All'}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        function renderTopRVs() {
+            filterRVs('all');
+        }
+        
+        function filterRVs(type) {
+            currentRVFilter = type;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(type) || (type === 'all' && btn.textContent === 'All Types')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            const tbody = document.getElementById('topRVsBody');
+            let html = '';
+            let count = 0;
+            
+            dashboardData.top_rvs_by_revenue.forEach(rv => {
+                if ((type === 'all' || rv.rv_type === type) && count < 15) {
+                    const rvName = rv.rv_year ? 
+                        `${rv.rv_year} ${rv.rv_make || ''} ${rv.rv_model || ''}`.trim() : 
+                        rv.rv_type;
+                    
+                    html += `
+                        <tr>
+                            <td><a href="${rv.url}" target="_blank" class="link">${rvName}</a></td>
+                            <td>${rv.rv_type}</td>
+                            <td>$${rv.base_price}</td>
+                            <td>${rv.sleeps || '-'}</td>
+                            <td>${rv.num_reviews || 0}</td>
+                            <td>${rv.overall_rating ? rv.overall_rating.toFixed(1) : '-'}⭐</td>
+                            <td>
+                                ${rv.host_name}
+                                ${rv.is_superhost ? '<span class="superhost-badge">S</span>' : ''}
+                            </td>
+                            <td>$${rv.summer_revenue.toLocaleString()}</td>
+                            <td>$${rv.annual_revenue_35pct.toLocaleString()}</td>
+                        </tr>
+                    `;
+                    count++;
+                }
+            });
+            
+            tbody.innerHTML = html || '<tr><td colspan="9">No listings found for this type</td></tr>';
+        }
+        
+        function renderTierRequirements() {
+            const tiers = dashboardData.tier_requirements;
+            let html = '';
+            
+            const tierOrder = ['Budget', 'Mid-Range', 'Upper-Mid', 'Premium'];
+            const tierColors = {
+                'Budget': '#e74c3c',
+                'Mid-Range': '#f39c12',
+                'Upper-Mid': '#3498db',
+                'Premium': '#9b59b6'
+            };
+            
+            tierOrder.forEach(tier => {
+                if (tiers[tier]) {
+                    html += `
+                        <div class="tier-card" style="border-top-color: ${tierColors[tier]}">
+                            <h4>${tier}</h4>
+                            <ul>
+                                ${tiers[tier].map(item => 
+                                    `<li>${item.amenity} (${Math.round(item.adoption_rate)}%)</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            });
+            
+            document.getElementById('tierRequirements').innerHTML = html;
+        }
+        
+        function renderPriceDistribution() {
+            // Create price distribution data by RV type
+            const rvTypes = dashboardData.rv_types;
+            
+            // Box plot for price distribution by RV type
+            const boxTraces = [];
+            rvTypes.forEach(type => {
+                // Generate sample data points based on min/max/avg
+                const sampleSize = type.count;
+                const prices = [];
+                
+                // Create a rough distribution
+                for (let i = 0; i < sampleSize; i++) {
+                    if (i < sampleSize * 0.25) {
+                        prices.push(type.min_price + Math.random() * (type.avg_price - type.min_price));
+                    } else if (i < sampleSize * 0.75) {
+                        prices.push(type.avg_price - 20 + Math.random() * 40);
+                    } else {
+                        prices.push(type.avg_price + Math.random() * (type.max_price - type.avg_price));
+                    }
+                }
+                
+                boxTraces.push({
+                    y: prices,
+                    type: 'box',
+                    name: type.rv_type,
+                    boxpoints: false,
+                    marker: { color: type.rv_type === 'Travel Trailer' ? '#667eea' : '#ddd' }
+                });
+            });
+            
+            // Add your listing as a point
+            const yourListingTrace = {
+                x: ['Travel Trailer'],
+                y: [97],
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Your Listing',
+                marker: {
+                    color: '#e74c3c',
+                    size: 15,
+                    symbol: 'star'
+                },
+                showlegend: true
+            };
+            
+            const boxLayout = {
+                title: 'Price Distribution by RV Type',
+                yaxis: { 
+                    title: 'Price per Night ($)',
+                    range: [0, 500]
+                },
+                xaxis: { title: 'RV Type' },
+                height: 450,
+                annotations: [{
+                    x: 'Travel Trailer',
+                    y: 97,
+                    text: `Your price: $97<br>(${dashboardData.your_listing.percentile.toFixed(1)}th percentile)`,
+                    showarrow: true,
+                    arrowhead: 2,
+                    arrowsize: 1,
+                    arrowwidth: 2,
+                    arrowcolor: '#e74c3c',
+                    ax: 40,
+                    ay: -40,
+                    bgcolor: '#fff',
+                    bordercolor: '#e74c3c',
+                    borderwidth: 2
+                }]
+            };
+            
+            Plotly.newPlot('priceDistributionChart', [...boxTraces, yourListingTrace], boxLayout);
+            
+            // Histogram for Travel Trailers only
+            const ttData = rvTypes.find(t => t.rv_type === 'Travel Trailer');
+            const ttPrices = [];
+            
+            // Generate more realistic distribution for Travel Trailers
+            for (let i = 0; i < ttData.count; i++) {
+                if (i < ttData.count * 0.1) {
+                    ttPrices.push(ttData.min_price + Math.random() * 25);
+                } else if (i < ttData.count * 0.5) {
+                    ttPrices.push(100 + Math.random() * 50);
+                } else if (i < ttData.count * 0.8) {
+                    ttPrices.push(150 + Math.random() * 50);
+                } else {
+                    ttPrices.push(200 + Math.random() * (ttData.max_price - 200));
+                }
+            }
+            
+            const histTrace = {
+                x: ttPrices,
+                type: 'histogram',
+                nbinsx: 30,
+                marker: {
+                    color: '#667eea',
+                    line: {
+                        color: '#fff',
+                        width: 1
+                    }
+                },
+                opacity: 0.7
+            };
+            
+            const yourLineTrace = {
+                x: [97, 97],
+                y: [0, 50],
+                mode: 'lines',
+                type: 'scatter',
+                name: 'Your Price ($97)',
+                line: {
+                    color: '#e74c3c',
+                    width: 3,
+                    dash: 'dash'
+                }
+            };
+            
+            const avgLineTrace = {
+                x: [ttData.avg_price, ttData.avg_price],
+                y: [0, 50],
+                mode: 'lines',
+                type: 'scatter',
+                name: `Average ($${Math.round(ttData.avg_price)})`,
+                line: {
+                    color: '#27ae60',
+                    width: 3,
+                    dash: 'dot'
+                }
+            };
+            
+            const histLayout = {
+                title: `Travel Trailer Price Distribution (${ttData.count} listings)`,
+                xaxis: { 
+                    title: 'Price per Night ($)',
+                    range: [50, 400]
+                },
+                yaxis: { title: 'Number of Listings' },
+                height: 400,
+                showlegend: true,
+                annotations: [
+                    {
+                        x: 97,
+                        y: 45,
+                        text: `${dashboardData.your_listing.cheaper_count} cheaper<br>than yours`,
+                        showarrow: false,
+                        bgcolor: '#fee',
+                        bordercolor: '#e74c3c',
+                        borderwidth: 1
+                    },
+                    {
+                        x: ttData.avg_price,
+                        y: 45,
+                        text: 'Market Average',
+                        showarrow: false,
+                        bgcolor: '#d4edda',
+                        bordercolor: '#27ae60',
+                        borderwidth: 1
+                    }
+                ]
+            };
+            
+            Plotly.newPlot('priceHistogramChart', [histTrace, yourLineTrace, avgLineTrace], histLayout);
+        }
+        
+        // Load data when page loads
+        loadDashboardData();
+    </script>
+</body>
+</html>

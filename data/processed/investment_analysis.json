@@ -1,0 +1,148 @@
+{
+  "market_overview": [
+    {
+      "rv_type": "Class A",
+      "listing_count": 7,
+      "avg_daily_rate": 371.85714285714283,
+      "min_price": 288.0,
+      "max_price": 454.0,
+      "avg_rating": 4.7,
+      "total_reviews": 71,
+      "avg_reviews": 10.142857142857142,
+      "reviews_per_year": 1.0020242914979758,
+      "unique_hosts": 5
+    },
+    {
+      "rv_type": "Class C",
+      "listing_count": 77,
+      "avg_daily_rate": 275.8831168831169,
+      "min_price": 150.0,
+      "max_price": 450.0,
+      "avg_rating": 7.114754098360655,
+      "total_reviews": 1107,
+      "avg_reviews": 18.147540983606557,
+      "reviews_per_year": 2.0303503589204053,
+      "unique_hosts": 50
+    },
+    {
+      "rv_type": "Class B",
+      "listing_count": 9,
+      "avg_daily_rate": 267.8888888888889,
+      "min_price": 155.0,
+      "max_price": 350.0,
+      "avg_rating": 7.814285714285714,
+      "total_reviews": 57,
+      "avg_reviews": 8.142857142857142,
+      "reviews_per_year": 1.0400793650793652,
+      "unique_hosts": 7
+    },
+    {
+      "rv_type": "Travel Trailer",
+      "listing_count": 220,
+      "avg_daily_rate": 142.1909090909091,
+      "min_price": 75.0,
+      "max_price": 288.0,
+      "avg_rating": 19.05333333333333,
+      "total_reviews": 1838,
+      "avg_reviews": 13.614814814814816,
+      "reviews_per_year": 2.699237761609934,
+      "unique_hosts": 182
+    }
+  ],
+  "roi_analysis": [
+    {
+      "RV Type": "Travel Trailer",
+      "Occupancy": "50%",
+      "Est. Purchase Price": 35000,
+      "Avg Daily Rate": 142.1909090909091,
+      "Annual Revenue": 25949.840909090908,
+      "Est. Annual Costs": 5250.0,
+      "Net Income": 20699.840909090908,
+      "ROI %": 59.1424025974026,
+      "Payback Years": 1.6908342510317933
+    },
+    {
+      "RV Type": "Class C",
+      "Occupancy": "50%",
+      "Est. Purchase Price": 85000,
+      "Avg Daily Rate": 275.8831168831169,
+      "Annual Revenue": 50348.668831168834,
+      "Est. Annual Costs": 12750.0,
+      "Net Income": 37598.668831168834,
+      "ROI %": 44.23372803666922,
+      "Payback Years": 2.2607183350474376
+    },
+    {
+      "RV Type": "Class A",
+      "Occupancy": "50%",
+      "Est. Purchase Price": 150000,
+      "Avg Daily Rate": 371.85714285714283,
+      "Annual Revenue": 67863.92857142857,
+      "Est. Annual Costs": 22500.0,
+      "Net Income": 45363.928571428565,
+      "ROI %": 30.242619047619044,
+      "Payback Years": 3.3065919271919952
+    },
+    {
+      "RV Type": "Class B",
+      "Occupancy": "50%",
+      "Est. Purchase Price": 120000,
+      "Avg Daily Rate": 267.8888888888889,
+      "Annual Revenue": 48889.722222222226,
+      "Est. Annual Costs": 18000.0,
+      "Net Income": 30889.722222222226,
+      "ROI %": 25.74143518518519,
+      "Payback Years": 3.8847872809186796
+    }
+  ],
+  "recommendations": [
+    {
+      "Rank": 1,
+      "Type": "Travel Trailer (20-25ft)",
+      "Investment": "$25,000-35,000",
+      "Target Rate": "$120-140/night",
+      "Why": "Low entry cost, high demand, easier to tow",
+      "Est. ROI": "15-20% at 50% occupancy"
+    },
+    {
+      "Rank": 2,
+      "Type": "Travel Trailer (26-30ft)",
+      "Investment": "$35,000-45,000",
+      "Target Rate": "$140-160/night",
+      "Why": "Family-friendly size, good availability",
+      "Est. ROI": "12-18% at 50% occupancy"
+    },
+    {
+      "Rank": 3,
+      "Type": "Class C (24-28ft)",
+      "Investment": "$70,000-90,000",
+      "Target Rate": "$250-300/night",
+      "Why": "Premium rates, self-contained, no tow vehicle needed",
+      "Est. ROI": "18-25% at 50% occupancy"
+    },
+    {
+      "Rank": 4,
+      "Type": "Toy Hauler",
+      "Investment": "$45,000-60,000",
+      "Target Rate": "$180-220/night",
+      "Why": "Niche market, less competition, adventure seekers",
+      "Est. ROI": "10-15% at 45% occupancy"
+    },
+    {
+      "Rank": 5,
+      "Type": "Class B Van",
+      "Investment": "$100,000-130,000",
+      "Target Rate": "$250-300/night",
+      "Why": "Growing segment, urban-friendly, year-round use",
+      "Est. ROI": "12-16% at 55% occupancy"
+    }
+  ],
+  "purchase_price_estimates": {
+    "Travel Trailer": 35000,
+    "Class C": 85000,
+    "Class B": 120000,
+    "Class A": 150000,
+    "Fifth Wheel": 45000,
+    "Toy Hauler": 50000
+  }
+}

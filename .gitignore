@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Data files (sensitive)
+data/raw/*.csv
+data/processed/*.db
+
+# Output files
+output/*.json
+output/*.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+debug_*.py
+test_*.py
+check_*.py
+
+# Keep directory structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!output/.gitkeep

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Investment Data</title>
+</head>
+<body>
+    <h1>Testing Investment & Host Data</h1>
+    <div id="output"></div>
+    
+    <script>
+        fetch('comprehensive_dashboard_data.json')
+            .then(response => response.json())
+            .then(data => {
+                const output = document.getElementById('output');
+                
+                // Check investment data
+                output.innerHTML += '<h2>Investment Opportunities:</h2>';
+                if (data.investment_opportunities) {
+                    output.innerHTML += `<p>Found ${data.investment_opportunities.length} items</p>`;
+                    output.innerHTML += '<pre>' + JSON.stringify(data.investment_opportunities[0], null, 2) + '</pre>';
+                } else {
+                    output.innerHTML += '<p style="color:red">No investment_opportunities found!</p>';
+                }
+                
+                // Check multi-owner data
+                output.innerHTML += '<h2>Multi-Owners:</h2>';
+                if (data.multi_owners) {
+                    output.innerHTML += `<p>Found ${data.multi_owners.length} items</p>`;
+                    output.innerHTML += '<pre>' + JSON.stringify(data.multi_owners[0], null, 2) + '</pre>';
+                } else {
+                    output.innerHTML += '<p style="color:red">No multi_owners found!</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('output').innerHTML = '<p style="color:red">Error: ' + error + '</p>';
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVezy Calgary Market Analysis Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .metric-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .metric-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        .chart-container {
+            margin: 2rem 0;
+            min-height: 400px;
+        }
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .alert-success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .highlight {
+            background-color: #ffd93d;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .tab-container {
+            margin: 2rem 0;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 1rem;
+        }
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RVezy Calgary Market Analysis Dashboard</h1>
+        <p>Comprehensive market insights for RV rental optimization and investment</p>
+    </div>
+
+    <div class="container">
+        <!-- Executive Summary -->
+        <div class="section">
+            <h2>📊 Executive Summary</h2>
+            <div class="alert alert-success">
+                <strong>🎯 Your Opportunity:</strong> Your $97/night listing is at the 5.2th percentile. 
+                Recommended price: <strong>$138/night</strong> for a <strong>42% revenue increase</strong>!
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">603</div>
+                    <div class="metric-label">Total Listings</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">281</div>
+                    <div class="metric-label">Calgary Listings</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">64</div>
+                    <div class="metric-label">Multi-RV Owners</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">36.7%</div>
+                    <div class="metric-label">Market Share by Multi-Owners</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market Overview -->
+        <div class="section">
+            <h2>🚐 Market Composition</h2>
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('overview', 0)">RV Types</button>
+                    <button class="tab-button" onclick="showTab('overview', 1)">Price Distribution</button>
+                    <button class="tab-button" onclick="showTab('overview', 2)">Geographic Spread</button>
+                </div>
+                <div class="tab-content active" id="overview-0">
+                    <div id="rvTypeChart" class="chart-container"></div>
+                </div>
+                <div class="tab-content" id="overview-1">
+                    <div id="priceDistChart" class="chart-container"></div>
+                </div>
+                <div class="tab-content" id="overview-2">
+                    <div id="geoChart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Opportunities -->
+        <div class="section">
+            <h2>💰 Revenue Optimization</h2>
+            <h3>Top RV Models by Summer Revenue Potential (120 days)</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Make</th>
+                            <th>Model</th>
+                            <th>Type</th>
+                            <th>Avg Price/Night</th>
+                            <th>Summer Revenue</th>
+                            <th>Units Listed</th>
+                            <th>Avg Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jayco</td>
+                            <td>Melbourne</td>
+                            <td>Class C</td>
+                            <td>$307.50</td>
+                            <td><strong>$36,900</strong></td>
+                            <td>4</td>
+                            <td>10.5</td>
+                        </tr>
+                        <tr>
+                            <td>Thor</td>
+                            <td>Motor Coach 23A</td>
+                            <td>Class C</td>
+                            <td>$288.00</td>
+                            <td><strong>$34,560</strong></td>
+                            <td>3</td>
+                            <td>14.0</td>
+                        </tr>
+                        <tr>
+                            <td>Forest River</td>
+                            <td>Sunseeker</td>
+                            <td>Class C</td>
+                            <td>$277.13</td>
+                            <td><strong>$33,255</strong></td>
+                            <td>8</td>
+                            <td>21.7</td>
+                        </tr>
+                        <tr style="background-color: #e8f5e9;">
+                            <td>Keystone</td>
+                            <td>Hideout</td>
+                            <td>Travel Trailer</td>
+                            <td>$160.56</td>
+                            <td><strong>$19,267</strong></td>
+                            <td>9</td>
+                            <td>27.0</td>
+                        </tr>
+                        <tr>
+                            <td>Keystone</td>
+                            <td>Cougar</td>
+                            <td>Travel Trailer</td>
+                            <td>$155.67</td>
+                            <td><strong>$18,680</strong></td>
+                            <td>3</td>
+                            <td>11.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>Winter-Ready Premium Opportunity</h3>
+            <div id="winterChart" class="chart-container"></div>
+        </div>
+
+        <!-- Top Performers -->
+        <div class="section">
+            <h2>🏆 Top Performers (Most Reviews = Most Bookings)</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>RV</th>
+                            <th>Price/Night</th>
+                            <th>Reviews</th>
+                            <th>Rating</th>
+                            <th>Location</th>
+                            <th>Host</th>
+                            <th>Superhost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2015 Starcraft Comet</td>
+                            <td>$102</td>
+                            <td><strong>76</strong></td>
+                            <td>5.0⭐</td>
+                            <td>Calgary</td>
+                            <td>HIAT</td>
+                            <td>✅</td>
+                        </tr>
+                        <tr>
+                            <td>2016 Forest River Sunseeker</td>
+                            <td>$218</td>
+                            <td><strong>61</strong></td>
+                            <td>4.9⭐</td>
+                            <td>Rocky View</td>
+                            <td>Robert</td>
+                            <td>✅</td>
+                        </tr>
+                        <tr style="background-color: #e8f5e9;">
+                            <td>2021 Jayco Jayflight 174</td>
+                            <td>$105</td>
+                            <td><strong>56</strong></td>
+                            <td>5.0⭐</td>
+                            <td>Airdrie</td>
+                            <td>Stacey</td>
+                            <td>✅</td>
+                        </tr>
+                        <tr>
+                            <td>2021 Crossroads Sunset Trail</td>
+                            <td>$115</td>
+                            <td><strong>54</strong></td>
+                            <td>5.0⭐</td>
+                            <td>Calgary</td>
+                            <td>Yianni</td>
+                            <td>✅</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><em>💡 Key Insight: 13 of top 15 listings are Superhosts - becoming a Superhost is crucial!</em></p>
+        </div>
+
+        <!-- Add-ons Analysis -->
+        <div class="section">
+            <h2>💸 Add-On Revenue Opportunities</h2>
+            <div id="addonsChart" class="chart-container"></div>
+            
+            <h3>Most Popular Add-Ons</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">$48</div>
+                    <div class="metric-label">Propane Refill<br><small>342 listings offer</small></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$79</div>
+                    <div class="metric-label">Septic Emptying<br><small>328 listings offer</small></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$34</div>
+                    <div class="metric-label">Portable BBQ<br><small>221 listings offer</small></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$43</div>
+                    <div class="metric-label">Bedding/Linens<br><small>220 listings offer</small></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Amenities Analysis -->
+        <div class="section">
+            <h2>🛠️ Essential Amenities by Price Tier</h2>
+            <div id="amenitiesHeatmap" class="chart-container"></div>
+            
+            <div class="alert">
+                <strong>Must-Have Amenities (95%+ adoption):</strong> Refrigerator, Kitchen sink, Heater, Stove, Dining table
+            </div>
+        </div>
+
+        <!-- Multi-Owner Analysis -->
+        <div class="section">
+            <h2>🏢 Multi-RV Owner Business Analysis</h2>
+            <div id="multiOwnerChart" class="chart-container"></div>
+            
+            <h3>Top Multi-RV Operators</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Owner</th>
+                            <th>RVs</th>
+                            <th>Avg Price</th>
+                            <th>Total Daily Revenue</th>
+                            <th>Est. Monthly (50%)</th>
+                            <th>Strategy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Julia</td>
+                            <td>7</td>
+                            <td>$229.71</td>
+                            <td>$1,608</td>
+                            <td><strong>$24,120</strong></td>
+                            <td>All Class C fleet</td>
+                        </tr>
+                        <tr>
+                            <td>Han</td>
+                            <td>6</td>
+                            <td>$289.83</td>
+                            <td>$1,739</td>
+                            <td><strong>$26,085</strong></td>
+                            <td>Premium Class C</td>
+                        </tr>
+                        <tr>
+                            <td>Nerpaul</td>
+                            <td>5</td>
+                            <td>$288.00</td>
+                            <td>$1,440</td>
+                            <td><strong>$21,600</strong></td>
+                            <td>Standardized pricing</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Investment Recommendations -->
+        <div class="section">
+            <h2>🎯 Data-Driven Investment Recommendations</h2>
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('invest', 0)">By Revenue Potential</button>
+                    <button class="tab-button" onclick="showTab('invest', 1)">Market Gaps</button>
+                    <button class="tab-button" onclick="showTab('invest', 2)">Success Factors</button>
+                </div>
+                <div class="tab-content active" id="invest-0">
+                    <h3>Top Investment Opportunities (Based on Market Data)</h3>
+                    <ol>
+                        <li><strong>Travel Trailer (20-25ft)</strong>
+                            <ul>
+                                <li>72 units in market averaging $130.54/night</li>
+                                <li>Summer revenue potential: $15,665</li>
+                                <li>Lower entry cost, easier to tow</li>
+                            </ul>
+                        </li>
+                        <li><strong>Travel Trailer (26-30ft)</strong>
+                            <ul>
+                                <li>62 units averaging $156.15/night</li>
+                                <li>Summer revenue potential: $18,738</li>
+                                <li>Family-friendly size, 76% offer delivery</li>
+                            </ul>
+                        </li>
+                        <li><strong>Class C Motorhome</strong>
+                            <ul>
+                                <li>Average $275.88/night</li>
+                                <li>Summer revenue potential: $33,106</li>
+                                <li>No tow vehicle needed, premium rates</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <div class="tab-content" id="invest-1">
+                    <h3>Identified Market Gaps</h3>
+                    <ul>
+                        <li><strong>Luxury Travel Trailers:</strong> Only 9 listings over $200/night</li>
+                        <li><strong>Pet-Friendly Class C:</strong> Only 39% allow pets</li>
+                        <li><strong>Small Travel Trailers:</strong> Only 44 under 20ft (easy tow market)</li>
+                        <li><strong>Winter-Ready Budget Options:</strong> Most winter-ready are premium priced</li>
+                    </ul>
+                </div>
+                <div class="tab-content" id="invest-2">
+                    <h3>Key Success Factors</h3>
+                    <ul>
+                        <li>✅ <strong>Superhost Status:</strong> 87% of top performers</li>
+                        <li>✅ <strong>Competitive Initial Pricing:</strong> Build reviews first</li>
+                        <li>✅ <strong>Delivery Service:</strong> 65% of Travel Trailers offer</li>
+                        <li>✅ <strong>Strategic Add-Ons:</strong> Average $204 extra revenue potential</li>
+                        <li>✅ <strong>Location:</strong> Calgary/Airdrie highest demand</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(section, index) {
+            const tabs = document.querySelectorAll(`#${section}-${index}`).forEach(tab => {
+                tab.classList.add('active');
+            });
+            const buttons = event.target.parentElement.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const contents = event.target.parentElement.nextElementSibling;
+            while (contents) {
+                if (contents.classList.contains('tab-content')) {
+                    contents.classList.remove('active');
+                    if (contents.id === `${section}-${index}`) {
+                        contents.classList.add('active');
+                    }
+                }
+                contents = contents.nextElementSibling;
+            }
+        }
+
+        // Chart 1: RV Type Distribution
+        var rvTypeData = [{
+            values: [431, 104, 15, 12, 41],
+            labels: ['Travel Trailer', 'Class C', 'Class B', 'Class A', 'Other'],
+            type: 'pie',
+            hole: .4,
+            marker: {
+                colors: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b']
+            }
+        }];
+        
+        var rvTypeLayout = {
+            title: 'RV Type Distribution',
+            height: 400,
+            showlegend: true
+        };
+        
+        Plotly.newPlot('rvTypeChart', rvTypeData, rvTypeLayout);
+
+        // Chart 2: Price Distribution
+        var priceData = [{
+            x: ['Travel Trailer', 'Class C', 'Class B', 'Class A'],
+            y: [142.19, 275.88, 267.89, 371.86],
+            type: 'bar',
+            marker: {
+                color: ['#667eea', '#764ba2', '#f093fb', '#4facfe']
+            }
+        }];
+        
+        var priceLayout = {
+            title: 'Average Price by RV Type',
+            xaxis: { title: 'RV Type' },
+            yaxis: { title: 'Average Price per Night ($)' },
+            height: 400
+        };
+        
+        Plotly.newPlot('priceDistChart', priceData, priceLayout);
+
+        // Chart 3: Geographic Distribution
+        var geoData = [{
+            x: ['Calgary', 'Airdrie', 'Red Deer', 'Cochrane', 'Chestermere', 'Lethbridge', 'Okotoks', 'Other'],
+            y: [281, 45, 27, 25, 17, 14, 12, 182],
+            type: 'bar',
+            marker: {
+                color: '#667eea'
+            }
+        }];
+        
+        var geoLayout = {
+            title: 'Listings by City',
+            xaxis: { title: 'City' },
+            yaxis: { title: 'Number of Listings' },
+            height: 400
+        };
+        
+        Plotly.newPlot('geoChart', geoData, geoLayout);
+
+        // Chart 4: Winter-Ready Analysis
+        var winterData = [
+            {
+                x: ['Travel Trailer', 'Class C', 'Class B', 'Class A'],
+                y: [67, 40, 7, 4],
+                name: 'Winter-Ready',
+                type: 'bar',
+                marker: { color: '#4facfe' }
+            },
+            {
+                x: ['Travel Trailer', 'Class C', 'Class B', 'Class A'],
+                y: [151.77, 275.42, 355.50, 362.25],
+                name: 'Avg Price',
+                type: 'scatter',
+                yaxis: 'y2',
+                marker: { color: '#f093fb', size: 12 }
+            }
+        ];
+        
+        var winterLayout = {
+            title: 'Winter-Ready RVs by Type',
+            xaxis: { title: 'RV Type' },
+            yaxis: { title: 'Count', side: 'left' },
+            yaxis2: {
+                title: 'Average Price ($)',
+                overlaying: 'y',
+                side: 'right'
+            },
+            height: 400,
+            showlegend: true
+        };
+        
+        Plotly.newPlot('winterChart', winterData, winterLayout);
+
+        // Chart 5: Add-ons Chart
+        var addonsData = [{
+            x: [48, 79, 34, 43, 82],
+            y: ['Propane Refill', 'Septic Empty', 'BBQ', 'Bedding', 'Generator'],
+            type: 'bar',
+            orientation: 'h',
+            marker: {
+                color: '#667eea'
+            },
+            text: ['342 listings', '328 listings', '221 listings', '220 listings', '148 listings'],
+            textposition: 'outside'
+        }];
+        
+        var addonsLayout = {
+            title: 'Most Popular Add-Ons by Average Price',
+            xaxis: { title: 'Average Price ($)' },
+            height: 400,
+            margin: { l: 100 }
+        };
+        
+        Plotly.newPlot('addonsChart', addonsData, addonsLayout);
+
+        // Chart 6: Amenities Heatmap
+        var amenitiesData = [{
+            z: [
+                [87, 269, 78, 87],  // Refrigerator
+                [89, 262, 78, 87],  // Heater
+                [73, 255, 77, 83],  // AC
+                [59, 189, 61, 81],  // Camping chairs
+                [43, 190, 53, 54]   // Oven
+            ],
+            x: ['Budget<br>(<$125)', 'Mid<br>($125-175)', 'Upper<br>($175-250)', 'Premium<br>($250+)'],
+            y: ['Refrigerator', 'Heater', 'Air Conditioner', 'Camping Chairs', 'Oven'],
+            type: 'heatmap',
+            colorscale: 'Viridis'
+        }];
+        
+        var amenitiesLayout = {
+            title: 'Amenity Availability by Price Tier (Count)',
+            height: 400
+        };
+        
+        Plotly.newPlot('amenitiesHeatmap', amenitiesData, amenitiesLayout);
+
+        // Chart 7: Multi-Owner Analysis
+        var multiOwnerData = [
+            {
+                x: [1, 2, 3, 4, 5, 6, 7],
+                y: [355, 43, 6, 4, 1, 1, 1],
+                type: 'bar',
+                name: 'Number of Hosts',
+                marker: { color: '#667eea' }
+            }
+        ];
+        
+        var multiOwnerLayout = {
+            title: 'Distribution of RV Portfolio Sizes',
+            xaxis: { title: 'Number of RVs Owned' },
+            yaxis: { title: 'Number of Hosts' },
+            height: 400
+        };
+        
+        Plotly.newPlot('multiOwnerChart', multiOwnerData, multiOwnerLayout);
+    </script>
+</body>
+</html>
