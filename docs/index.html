@@ -2413,7 +2413,7 @@
             
             // Revenue Projections
             let revenueHtml = '<table style="width: 100%;">';
-            revenueHtml += '<tr><th>Scenario</th><th>Days</th><th>Gross Revenue</th><th>Net Revenue</th></tr>';
+            revenueHtml += '<tr><th>Scenario</th><th>Nights</th><th>Gross Revenue</th><th>Net Revenue</th></tr>';
             
             Object.entries(scenarios).forEach(([scenario, days]) => {
                 const gross = finalRate * days;
@@ -2555,24 +2555,26 @@
                 return { ...listing, similarity_score: score };
             });
             
-            // Sort by similarity and take top 5
+            // Sort by similarity and take top 10
             similar.sort((a, b) => b.similarity_score - a.similarity_score);
-            const top5 = similar.slice(0, 5);
+            const top10 = similar.slice(0, 10);
             
             let similarHtml = '<table style="width: 100%; font-size: 0.9rem;">';
-            similarHtml += '<tr><th>RV</th><th>Price</th><th>Reviews</th><th>Summer Rev</th></tr>';
+            similarHtml += '<tr><th>RV</th><th>Price</th><th>Reviews</th><th>Rating</th><th>Summer Rev</th></tr>';
             
-            top5.forEach(listing => {
+            top10.forEach(listing => {
                 const name = listing.rv_year ? 
                     `${listing.rv_year} ${listing.rv_make || ''} ${listing.rv_model || ''}`.trim() : 
                     listing.rv_type;
                 const summerRev = listing.base_price * 120;
+                const rating = listing.overall_rating ? listing.overall_rating.toFixed(1) + '⭐' : 'N/A';
                 
                 similarHtml += `
                     <tr>
-                        <td><a href="${listing.url}" target="_blank" style="color: #667eea;">${name}</a></td>
+                        <td><a href="${listing.url}" target="_blank" style="color: #333; text-decoration: underline;">${name}</a></td>
                         <td>$${listing.base_price}</td>
                         <td>${listing.num_reviews}</td>
+                        <td>${rating}</td>
                         <td>$${Math.round(summerRev).toLocaleString()}</td>
                     </tr>
                 `;
@@ -2580,8 +2582,8 @@
             
             similarHtml += '</table>';
             
-            if (top5.length > 0) {
-                const avgPrice = top5.reduce((sum, l) => sum + l.base_price, 0) / top5.length;
+            if (top10.length > 0) {
+                const avgPrice = top10.reduce((sum, l) => sum + l.base_price, 0) / top10.length;
                 similarHtml += `<p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
                     Average price of similar listings: <strong>$${Math.round(avgPrice)}/night</strong>
                 </p>`;
