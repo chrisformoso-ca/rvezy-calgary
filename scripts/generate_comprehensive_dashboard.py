@@ -279,20 +279,20 @@ def generate_comprehensive_dashboard_data():
     
     # Default cost assumptions for calculator
     cost_assumptions = {
-        'rvezy_platform_fee': 0.13,  # 13% platform fee
-        'owner_split': 0.60,  # 60% to owner (you)
+        'rvezy_platform_fee': 0.20,  # 20% platform fee
         'insurance_rate': 0.025,  # 2.5% of RV value annually
         'maintenance_rate': 0.05,  # 5% of revenue for maintenance
-        'cleaning_per_rental': 75,  # $75 per rental
+        'cleaning_per_rental': 0,  # $0 default (user can adjust)
+        'supplies_monthly': 0,  # $0 default for supplies
         'storage_monthly': {
             'small': 50,  # Tent Trailer
             'medium': 100,  # Travel Trailer, Campervan
             'large': 150  # Class A, Class C
         },
         'avg_rental_days': {
-            'conservative': 60,  # 50% occupancy
-            'moderate': 84,  # 70% occupancy  
-            'optimistic': 108  # 90% occupancy
+            'conservative': 84,  # 120 - 30% (summer days minus 30%)
+            'moderate': 120,  # Base summer season
+            'optimistic': 156  # 120 + 30% (summer days plus 30%)
         }
     }
     

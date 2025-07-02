@@ -395,6 +395,160 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* ROI Calculator Redesign Styles */
+        .roi-hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .roi-hero-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .hero-metric {
+            padding: 1rem;
+        }
+        
+        .hero-metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        
+        .hero-metric-sublabel {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .roi-input-groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .input-group-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .input-group-section h5 {
+            margin: 0 0 1rem 0;
+            color: #667eea;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .revenue-cost-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .summary-card h4 {
+            margin: 0 0 1rem 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .detail-tabs {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .tab-headers {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab-header {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.2s;
+        }
+        
+        .tab-header:hover {
+            background: #e9ecef;
+        }
+        
+        .tab-header.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            margin-bottom: -2px;
+        }
+        
+        .tab-content-panel {
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .tab-content-panel.active {
+            display: block;
+        }
+        
+        .metric-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        @media (max-width: 768px) {
+            .revenue-cost-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-metric-value {
+                font-size: 2rem;
+            }
+            
+            .tab-headers {
+                flex-wrap: wrap;
+            }
+            
+            .tab-header {
+                flex: 1 1 50%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -547,8 +701,37 @@
                 
                 <!-- ROI Calculator Section -->
                 <h3>🧮 ROI Calculator - Evaluate Any RV Purchase</h3>
-                <div class="roi-calculator-container">
-                    <div class="calculator-inputs">
+                
+                <!-- Hero Metrics Section (hidden by default) -->
+                <div class="roi-hero-section" id="roiHeroSection" style="display: none;">
+                    <div class="roi-hero-metrics">
+                        <div class="hero-metric">
+                            <div class="hero-metric-label">Net Annual Profit</div>
+                            <div class="hero-metric-value" id="heroProfit">$0</div>
+                            <div class="hero-metric-sublabel">After all costs</div>
+                        </div>
+                        <div class="hero-metric">
+                            <div class="hero-metric-label">Return on Investment</div>
+                            <div class="hero-metric-value" id="heroROI">0%</div>
+                            <div class="hero-metric-sublabel">Annual return</div>
+                        </div>
+                        <div class="hero-metric">
+                            <div class="hero-metric-label">Payback Period</div>
+                            <div class="hero-metric-value" id="heroPayback">0</div>
+                            <div class="hero-metric-sublabel">Years to break even</div>
+                        </div>
+                        <div class="hero-metric">
+                            <div class="hero-metric-label">Break-Even Occupancy</div>
+                            <div class="hero-metric-value" id="heroBreakeven">0%</div>
+                            <div class="hero-metric-sublabel">Days needed to profit</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reorganized Input Groups -->
+                <div class="roi-input-groups">
+                    <div class="input-group-section">
+                        <h5>🚐 RV Details</h5>
                         <div class="input-group">
                             <label for="calcPurchasePrice">Purchase Price ($)</label>
                             <input type="number" id="calcPurchasePrice" placeholder="e.g. 25000" onchange="calculateROI()">
@@ -576,10 +759,22 @@
                             <label for="calcSleeps">Sleeps</label>
                             <input type="number" id="calcSleeps" placeholder="e.g. 6" onchange="calculateROI()">
                         </div>
+                    </div>
+                    
+                    <div class="input-group-section">
+                        <h5>💰 Revenue Settings</h5>
                         <div class="input-group">
                             <label for="calcNightlyRate">Your Nightly Rate ($)</label>
                             <input type="number" id="calcNightlyRate" placeholder="Leave blank for category avg" onchange="calculateROI()">
                         </div>
+                        <div class="input-group">
+                            <label for="calcRVezyFee">RVezy Platform Fee (%)</label>
+                            <input type="number" id="calcRVezyFee" placeholder="e.g. 20" value="20" step="1" onchange="calculateROI()">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group-section">
+                        <h5>🏠 Fixed Costs</h5>
                         <div class="input-group">
                             <label for="calcStorageCost">Monthly Storage ($)</label>
                             <input type="number" id="calcStorageCost" placeholder="e.g. 100" value="100" onchange="calculateROI()">
@@ -590,21 +785,59 @@
                         </div>
                     </div>
                     
-                    <div class="calculator-results" id="roiResults">
-                        <div class="result-section">
-                            <h4>Category Comparison</h4>
-                            <div id="categoryComparison"></div>
+                    <div class="input-group-section">
+                        <h5>🔧 Variable Costs</h5>
+                        <div class="input-group">
+                            <label for="calcMaintenanceRate">Maintenance (% of revenue)</label>
+                            <input type="number" id="calcMaintenanceRate" placeholder="e.g. 5" value="5" step="1" onchange="calculateROI()">
                         </div>
-                        <div class="result-section">
-                            <h4>Revenue Projections</h4>
+                        <div class="input-group">
+                            <label for="calcCleaningCost">Cleaning per Rental ($)</label>
+                            <input type="number" id="calcCleaningCost" placeholder="e.g. 50" value="0" onchange="calculateROI()">
+                        </div>
+                        <div class="input-group">
+                            <label for="calcSuppliesCost">Monthly Supplies ($)</label>
+                            <input type="number" id="calcSuppliesCost" placeholder="e.g. 50" value="0" onchange="calculateROI()">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div id="roiResults" style="display: none;">
+                    <!-- Revenue and Cost Summary Cards -->
+                    <div class="revenue-cost-summary">
+                        <div class="summary-card">
+                            <h4>📈 Revenue Projections</h4>
+                            <div id="revenueSummaryChart"></div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>📊 Cost Breakdown</h4>
+                            <div id="costSummaryChart"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Analysis Tabs -->
+                    <div class="detail-tabs">
+                        <div class="tab-headers">
+                            <button class="tab-header active" onclick="switchTab('revenue')">Revenue Details</button>
+                            <button class="tab-header" onclick="switchTab('costs')">Cost Analysis</button>
+                            <button class="tab-header" onclick="switchTab('comparison')">Market Comparison</button>
+                            <button class="tab-header" onclick="switchTab('similar')">Similar Listings</button>
+                        </div>
+                        
+                        <div id="revenue-tab" class="tab-content-panel active">
                             <div id="revenueProjections"></div>
                         </div>
-                        <div class="result-section">
-                            <h4>Cost Breakdown</h4>
+                        
+                        <div id="costs-tab" class="tab-content-panel">
                             <div id="costBreakdown"></div>
                         </div>
-                        <div class="result-section">
-                            <h4>Similar Listings</h4>
+                        
+                        <div id="comparison-tab" class="tab-content-panel">
+                            <div id="categoryComparison"></div>
+                        </div>
+                        
+                        <div id="similar-tab" class="tab-content-panel">
                             <div id="similarListings"></div>
                         </div>
                     </div>
@@ -2118,13 +2351,17 @@
             const nightlyRate = parseFloat(document.getElementById('calcNightlyRate').value);
             const storageCost = parseFloat(document.getElementById('calcStorageCost').value) || 100;
             const insuranceRate = parseFloat(document.getElementById('calcInsuranceRate').value) || 2.5;
+            const rvEzyFee = parseFloat(document.getElementById('calcRVezyFee').value) || 20;
+            const maintenanceRate = parseFloat(document.getElementById('calcMaintenanceRate').value) || 5;
+            const cleaningCost = parseFloat(document.getElementById('calcCleaningCost').value) || 0;
+            const suppliesCost = parseFloat(document.getElementById('calcSuppliesCost').value) || 0;
             
             if (!purchasePrice || !rvType || !dashboardData.roi_calculator) {
                 document.getElementById('roiResults').style.display = 'none';
                 return;
             }
             
-            document.getElementById('roiResults').style.display = 'grid';
+            document.getElementById('roiResults').style.display = 'block';
             
             const calcData = dashboardData.roi_calculator;
             const categoryData = calcData.category_averages.find(cat => cat.rv_type === rvType);
@@ -2168,19 +2405,18 @@
             
             // Revenue Projections
             let revenueHtml = '<table style="width: 100%;">';
-            revenueHtml += '<tr><th>Scenario</th><th>Days</th><th>Gross Revenue</th><th>Your Share (60%)</th></tr>';
+            revenueHtml += '<tr><th>Scenario</th><th>Days</th><th>Gross Revenue</th><th>Net Revenue</th></tr>';
             
             Object.entries(scenarios).forEach(([scenario, days]) => {
                 const gross = finalRate * days;
-                const afterFees = gross * (1 - costs.rvezy_platform_fee);
-                const yourShare = afterFees * costs.owner_split;
+                const afterFees = gross * (1 - (rvEzyFee / 100));
                 
                 revenueHtml += `
                     <tr>
                         <td>${scenario.charAt(0).toUpperCase() + scenario.slice(1)}</td>
                         <td>${days}</td>
                         <td>$${Math.round(gross).toLocaleString()}</td>
-                        <td><strong>$${Math.round(yourShare).toLocaleString()}</strong></td>
+                        <td><strong>$${Math.round(afterFees).toLocaleString()}</strong></td>
                     </tr>
                 `;
             });
@@ -2190,10 +2426,11 @@
             // Cost Breakdown
             const annualInsurance = purchasePrice * (insuranceRate / 100);
             const annualStorage = storageCost * 12;
+            const annualSupplies = suppliesCost * 12;
             const avgRentals = scenarios.moderate / 3; // Assume 3-day average rental
-            const annualCleaning = costs.cleaning_per_rental * avgRentals;
+            const annualCleaning = cleaningCost * avgRentals;
             const moderateGross = finalRate * scenarios.moderate;
-            const annualMaintenance = moderateGross * costs.maintenance_rate;
+            const annualMaintenance = moderateGross * (maintenanceRate / 100);
             
             const costHtml = `
                 <div class="result-metric">
@@ -2205,23 +2442,27 @@
                     <span class="metric-value negative">-$${Math.round(annualStorage).toLocaleString()}</span>
                 </div>
                 <div class="result-metric">
+                    <span class="metric-label">Annual Supplies:</span>
+                    <span class="metric-value negative">-$${Math.round(annualSupplies).toLocaleString()}</span>
+                </div>
+                <div class="result-metric">
                     <span class="metric-label">Est. Cleaning (${Math.round(avgRentals)} rentals):</span>
                     <span class="metric-value negative">-$${Math.round(annualCleaning).toLocaleString()}</span>
                 </div>
                 <div class="result-metric">
-                    <span class="metric-label">Est. Maintenance (5%):</span>
+                    <span class="metric-label">Est. Maintenance (${maintenanceRate}%):</span>
                     <span class="metric-value negative">-$${Math.round(annualMaintenance).toLocaleString()}</span>
                 </div>
                 <div class="result-metric" style="border-top: 2px solid #333; margin-top: 0.5rem; padding-top: 0.5rem;">
                     <span class="metric-label"><strong>Total Annual Costs:</strong></span>
-                    <span class="metric-value negative"><strong>-$${Math.round(annualInsurance + annualStorage + annualCleaning + annualMaintenance).toLocaleString()}</strong></span>
+                    <span class="metric-value negative"><strong>-$${Math.round(annualInsurance + annualStorage + annualSupplies + annualCleaning + annualMaintenance).toLocaleString()}</strong></span>
                 </div>
             `;
             document.getElementById('costBreakdown').innerHTML = costHtml;
             
             // Calculate final ROI
-            const moderateRevenue = moderateGross * (1 - costs.rvezy_platform_fee) * costs.owner_split;
-            const totalCosts = annualInsurance + annualStorage + annualCleaning + annualMaintenance;
+            const moderateRevenue = moderateGross * (1 - (rvEzyFee / 100));
+            const totalCosts = annualInsurance + annualStorage + annualSupplies + annualCleaning + annualMaintenance;
             const netProfit = moderateRevenue - totalCosts;
             const roi = (netProfit / purchasePrice) * 100;
             const paybackYears = purchasePrice / netProfit;
@@ -2247,6 +2488,36 @@
             
             // Find similar listings
             findSimilarListings(rvType, year, length, sleeps);
+            
+            // Update hero section
+            document.getElementById('roiHeroSection').style.display = 'block';
+            document.getElementById('heroProfit').textContent = netProfit > 0 ? 
+                '$' + Math.round(netProfit).toLocaleString() : 
+                '-$' + Math.round(Math.abs(netProfit)).toLocaleString();
+            document.getElementById('heroProfit').style.color = netProfit > 0 ? '#4caf50' : '#f44336';
+            
+            document.getElementById('heroROI').textContent = roi.toFixed(1) + '%';
+            document.getElementById('heroROI').style.color = roi > 0 ? '#4caf50' : '#f44336';
+            
+            document.getElementById('heroPayback').textContent = paybackYears > 0 && paybackYears < 50 ? 
+                paybackYears.toFixed(1) : 'N/A';
+            
+            // Calculate break-even occupancy
+            const breakEvenDays = totalCosts / (finalRate * (1 - rvEzyFee/100));
+            const breakEvenOccupancy = (breakEvenDays / 365) * 100;
+            document.getElementById('heroBreakeven').textContent = breakEvenOccupancy < 100 ? 
+                Math.round(breakEvenOccupancy) + '%' : 
+                '100%+';
+            
+            // Create summary charts
+            createRevenueSummaryChart(scenarios, finalRate, rvEzyFee);
+            createCostSummaryChart({
+                'Insurance': Math.round(annualInsurance),
+                'Storage': Math.round(annualStorage),
+                'Supplies': Math.round(annualSupplies),
+                'Cleaning': Math.round(annualCleaning),
+                'Maintenance': Math.round(annualMaintenance)
+            });
         }
         
         function findSimilarListings(rvType, year, length, sleeps) {
@@ -2309,6 +2580,80 @@
             }
             
             document.getElementById('similarListings').innerHTML = similarHtml;
+        }
+        
+        // Tab switching function for ROI calculator
+        function switchTab(tabName) {
+            // Hide all tab panels
+            document.querySelectorAll('.tab-content-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Remove active class from all headers
+            document.querySelectorAll('.tab-header').forEach(header => {
+                header.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Highlight selected header
+            event.target.classList.add('active');
+        }
+        
+        // Create revenue summary chart
+        function createRevenueSummaryChart(scenarios, finalRate, rvEzyFee) {
+            const data = [{
+                x: ['Conservative', 'Moderate', 'Optimistic'],
+                y: [
+                    scenarios.conservative * finalRate * (1 - rvEzyFee/100),
+                    scenarios.moderate * finalRate * (1 - rvEzyFee/100),
+                    scenarios.optimistic * finalRate * (1 - rvEzyFee/100)
+                ],
+                type: 'bar',
+                marker: {
+                    color: ['#ffc107', '#28a745', '#17a2b8']
+                },
+                text: [
+                    '$' + Math.round(scenarios.conservative * finalRate * (1 - rvEzyFee/100)).toLocaleString(),
+                    '$' + Math.round(scenarios.moderate * finalRate * (1 - rvEzyFee/100)).toLocaleString(),
+                    '$' + Math.round(scenarios.optimistic * finalRate * (1 - rvEzyFee/100)).toLocaleString()
+                ],
+                textposition: 'auto'
+            }];
+            
+            const layout = {
+                title: '',
+                yaxis: { title: 'Net Revenue ($)' },
+                height: 300,
+                margin: { t: 20, b: 40 }
+            };
+            
+            Plotly.newPlot('revenueSummaryChart', data, layout, {responsive: true});
+        }
+        
+        // Create cost breakdown chart
+        function createCostSummaryChart(costs) {
+            const data = [{
+                values: Object.values(costs),
+                labels: Object.keys(costs),
+                type: 'pie',
+                hole: 0.4,
+                marker: {
+                    colors: ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#6c757d']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside'
+            }];
+            
+            const layout = {
+                title: '',
+                height: 300,
+                margin: { t: 20, b: 20 },
+                showlegend: false
+            };
+            
+            Plotly.newPlot('costSummaryChart', data, layout, {responsive: true});
         }
         
         // Load data when page loads

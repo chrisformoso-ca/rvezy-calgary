@@ -16933,20 +16933,20 @@
       }
     ],
     "cost_assumptions": {
-      "rvezy_platform_fee": 0.13,
-      "owner_split": 0.6,
+      "rvezy_platform_fee": 0.2,
       "insurance_rate": 0.025,
       "maintenance_rate": 0.05,
-      "cleaning_per_rental": 75,
+      "cleaning_per_rental": 0,
+      "supplies_monthly": 0,
       "storage_monthly": {
         "small": 50,
         "medium": 100,
         "large": 150
       },
       "avg_rental_days": {
-        "conservative": 60,
-        "moderate": 84,
-        "optimistic": 108
+        "conservative": 84,
+        "moderate": 120,
+        "optimistic": 156
       }
     }
   },
