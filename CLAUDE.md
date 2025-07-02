@@ -98,8 +98,9 @@ sqlite3 data/processed/rvezy_listings.db ".schema listings"  # Show table struct
 ### Dashboard System
 - `generate_comprehensive_dashboard.py` creates both data (`comprehensive_dashboard_data.json`) and HTML (`dashboard_comprehensive.html`)
 - Dashboard includes 7 tabs: Market Overview, Price Analysis, Specs Analysis, Add-Ons Revenue, Top Performers, Investment Analysis, Host Intelligence
-- Interactive features: price threshold slider, sortable tables, clickable charts
+- Interactive features: price threshold slider, sortable tables, clickable charts, **ROI calculator**
 - Responsive design with real-time filtering capabilities
+- **NEW: ROI Calculator** in Investment tab for evaluating potential RV purchases with real market data
 
 ## Database Schema
 
@@ -165,3 +166,49 @@ When identifying opportunities:
 - Fleet composition and pricing strategies
 - Summer revenue calculations (120 days)
 - Expandable portfolio views
+
+### ROI Calculator (NEW)
+- Interactive calculator in Investment Analysis tab
+- Input: Purchase price, RV specs, storage costs, insurance
+- Calculates ROI based on category averages and actual market data
+- Shows similar listings for comparison
+- Revenue projections for 50%, 70%, 90% occupancy scenarios
+- Full cost breakdown including RVezy fees, maintenance, cleaning
+- Your 60/40 profit split factored in
+
+## Dashboard Deployment
+
+### Viewing Locally
+```bash
+cd output && python3 -m http.server 8080
+# Access at http://localhost:8080/dashboard_comprehensive.html
+```
+
+### Deploying to GitHub Pages
+```bash
+# Copy files for deployment
+cp output/dashboard_comprehensive.html output/index.html
+
+# Option 1: Deploy to gh-pages branch
+git checkout -b gh-pages
+cp output/index.html output/comprehensive_dashboard_data.json .
+git add index.html comprehensive_dashboard_data.json
+git commit -m "Deploy dashboard"
+git push origin gh-pages
+
+# Option 2: Deploy from docs folder
+mkdir -p docs
+cp output/index.html output/comprehensive_dashboard_data.json docs/
+git add docs/
+git commit -m "Add dashboard to docs"
+git push origin main
+```
+
+Access at: https://chrisformoso-ca.github.io/rvezy-calgary/
+
+### Other Deployment Options
+- **Netlify**: Drag and drop the output folder at app.netlify.com/drop
+- **Local Network**: Host on your Proxmox server with nginx
+- **PWA**: Can be made into an offline-capable Progressive Web App
+
+See DEPLOYMENT.md for detailed deployment instructions.

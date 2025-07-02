@@ -227,6 +227,80 @@ def generate_comprehensive_dashboard_data():
     
     dashboard_data['investment_opportunities'] = investment_opps
     
+    # 6b. ROI Calculator Data - Category averages and cost assumptions
+    print("6b. Generating ROI calculator data...")
+    
+    # Get detailed category averages for ROI calculations
+    category_averages = pd.read_sql_query("""
+        SELECT 
+            rv_type,
+            COUNT(*) as count,
+            AVG(base_price) as avg_price,
+            MIN(base_price) as min_price,
+            MAX(base_price) as max_price,
+            AVG(CASE WHEN num_reviews >= 20 THEN base_price END) as avg_price_successful,
+            AVG(num_reviews) as avg_reviews,
+            AVG(CASE WHEN overall_rating >= 0 AND overall_rating <= 5 THEN overall_rating END) as avg_rating,
+            AVG(sleeps) as avg_sleeps,
+            AVG(length_ft) as avg_length,
+            AVG(CASE WHEN rv_year >= 1990 AND rv_year <= 2025 THEN rv_year END) as avg_year
+        FROM listings
+        WHERE base_price IS NOT NULL
+        AND rv_type IN ('Travel Trailer', 'Class C', 'Tent Trailer', 'Campervan', 'Class A')
+        GROUP BY rv_type
+        HAVING COUNT(*) >= 5
+    """, conn).to_dict('records')
+    
+    # Add estimated purchase prices and summer revenue
+    for cat in category_averages:
+        # Summer revenue (120 days)
+        cat['summer_revenue'] = cat['avg_price'] * 120 if cat['avg_price'] else 0
+        cat['summer_revenue_successful'] = cat['avg_price_successful'] * 120 if cat['avg_price_successful'] else 0
+        
+        # Use existing purchase price estimates
+        if cat['rv_type'] == 'Travel Trailer':
+            cat['est_purchase_new'] = 35000
+            cat['est_purchase_used'] = 25000
+        elif cat['rv_type'] == 'Class C':
+            cat['est_purchase_new'] = 80000
+            cat['est_purchase_used'] = 55000
+        elif cat['rv_type'] == 'Tent Trailer':
+            cat['est_purchase_new'] = 20000
+            cat['est_purchase_used'] = 12000
+        elif cat['rv_type'] == 'Campervan':
+            cat['est_purchase_new'] = 60000
+            cat['est_purchase_used'] = 40000
+        elif cat['rv_type'] == 'Class A':
+            cat['est_purchase_new'] = 120000
+            cat['est_purchase_used'] = 80000
+        else:
+            cat['est_purchase_new'] = 50000
+            cat['est_purchase_used'] = 35000
+    
+    # Default cost assumptions for calculator
+    cost_assumptions = {
+        'rvezy_platform_fee': 0.13,  # 13% platform fee
+        'owner_split': 0.60,  # 60% to owner (you)
+        'insurance_rate': 0.025,  # 2.5% of RV value annually
+        'maintenance_rate': 0.05,  # 5% of revenue for maintenance
+        'cleaning_per_rental': 75,  # $75 per rental
+        'storage_monthly': {
+            'small': 50,  # Tent Trailer
+            'medium': 100,  # Travel Trailer, Campervan
+            'large': 150  # Class A, Class C
+        },
+        'avg_rental_days': {
+            'conservative': 60,  # 50% occupancy
+            'moderate': 84,  # 70% occupancy  
+            'optimistic': 108  # 90% occupancy
+        }
+    }
+    
+    dashboard_data['roi_calculator'] = {
+        'category_averages': category_averages,
+        'cost_assumptions': cost_assumptions
+    }
+    
     # 7. Add-ons comprehensive analysis
     print("7. Generating add-ons analysis...")
     addons_analysis = pd.read_sql_query("""
